@@ -9,7 +9,7 @@ public class PenguinScript : MonoBehaviour
     public float dashSpeed = 10.0f; // Forward movement speed during dash
     public float rotationSpeed = 8.0f; // How fast penguin rotates
     
-    private bool isDashing = false;
+    [HideInInspector] public bool isDashing = false;
     private bool isReturningUpright = false; // Ensure penguin returns to upright after dash
     private float dashTimer = 0.0f; // Tracker for the cooldown
     private float cooldownTimer = 0.0f;

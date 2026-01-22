@@ -11,6 +11,7 @@ public class CharacterMovement : MonoBehaviour
     private float directionChangeWeight = 15f; // How quickly the character can change direction
     private Rigidbody rb; // Rigid body of the character
     private bool grounded = false; // If the character is touching the ground
+    private PenguinScript penguinScript; // Reference to penguin dash script
     
     [HideInInspector] public bool overrideRotation = false; // Allow other scripts to override rotation
     [HideInInspector] public Quaternion targetRotation; // Target rotation when overridden
@@ -20,6 +21,7 @@ public class CharacterMovement : MonoBehaviour
     {
         // Get the Rigidbody of the character
         rb = GetComponent<Rigidbody>();
+        penguinScript = GetComponent<PenguinScript>();
     }
 
     // Update is called once per frame
@@ -28,8 +30,11 @@ public class CharacterMovement : MonoBehaviour
         // Check for player inputs for lateral movement
         Vector2 inputDirection = InputSystem.actions.FindAction("Move").ReadValue<Vector2>();
 
+        // Don't process movement input if penguin is dashing
+        bool isDashing = penguinScript != null && penguinScript.isDashing;
+        
         // Update the current direction and speed of the character based on player input
-        if (!inputDirection.Equals(Vector2.zero))
+        if (!inputDirection.Equals(Vector2.zero) && !isDashing)
         {
             // Calculate new velocity, ensure it doesn't exceed max ground or air speed, then assign the velocity
             Vector2 newVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.z) + inputDirection * Time.fixedDeltaTime * directionChangeWeight;
