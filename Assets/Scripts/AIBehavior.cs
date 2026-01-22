@@ -7,7 +7,8 @@ public class AIBehavior : MonoBehaviour
     public GameManager gameManager;
     public bool onLeft;
 
-    [Header("Ball Interaction Settings")]
+    [Header("Ball Manager")]
+    public BallManager ballManager;
     public float interactionRadius = 5f;
 
     [Header("Movement Attributes")]
@@ -22,7 +23,9 @@ public class AIBehavior : MonoBehaviour
     private Vector3 bumpToLocation; // Where the ball will go after bumping
     private Vector3 setToLocation; // Where the ball will go after setting
     private Vector3 spikeToLocation; // Where the ball will go after spiking
+    private Vector3 serveToLocation; // Where the ball will go after serving
     private float spikeSpeed; // Speed of the ball when spiked
+    private float timeTilServe; // Time remaining until AI can serve
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -37,7 +40,13 @@ public class AIBehavior : MonoBehaviour
             Debug.LogError("Ball game object was not found for AIBehavior!");
         }
 
+        if (ballManager == null)
+        {
+            Debug.LogError("Ball Manager was not set in inspector for AIBehavior!");
+        }
+
         spikeSpeed = 10f;
+        timeTilServe = 2f;
     }
 
     // Update is called once per frame
@@ -52,13 +61,11 @@ public class AIBehavior : MonoBehaviour
     private void CheckState()
     {
         // If your team is setting up for an attack OR the other team has just spiked
-        if (!gameObject.Equals(gameManager.lastHit)
-            && ((gameManager.leftAttack.Equals(onLeft) && !gameManager.gameState.Equals(GameManager.GameState.Spiked)) 
-            || (!gameManager.leftAttack.Equals(onLeft) && gameManager.gameState.Equals(GameManager.GameState.Spiked))))
+        if (CanHit())
         {
             switch (gameManager.gameState)
             {
-                case GameManager.GameState.Spiked:
+                case GameManager.GameState.Spiked: case GameManager.GameState.Served:
                     if (IsAINearBall() && ballRb.linearVelocity.y < 0)
                     {
                         BumpBall();
@@ -107,12 +114,50 @@ public class AIBehavior : MonoBehaviour
                         }
                     }
                     break;
+                case GameManager.GameState.PointStart:
+                    // If this AI is the one serving
+                    if (gameManager.server == gameObject)
+                    {
+                        // If the AI can serve ball, do so. Otherwise, wait.
+                        if (timeTilServe < 0f)
+                        {
+                            ServeBall();
+                        }
+                        else
+                        {
+                            timeTilServe -= Time.deltaTime;
+                        }
+                    }
+                    break;
             }
         }
-        else // Reposition for defense
+        // Reposition for defense ONLY IF the ball is not about to be served
+        else if (!gameManager.gameState.Equals(GameManager.GameState.PointStart))
         {
             MoveAI(false);
         }
+    }
+
+    private bool CanHit()
+    {
+        // If this AI just hit the ball, they cannot hit it again
+        if (gameObject.Equals(gameManager.lastHit)) return false;
+
+        // If the ball has been served by the other team, they can hit
+        if (!gameManager.leftAttack.Equals(onLeft) && gameManager.gameState.Equals(GameManager.GameState.Served)) return true;
+
+        // If it's the AI's turn to serve, they can hit
+        if (gameManager.leftAttack.Equals(onLeft) && gameManager.gameState.Equals(GameManager.GameState.PointStart)
+            && gameManager.server == gameObject) return true;
+
+        // If the ball has been served by a teammate, they cannot hit it
+        if (gameManager.leftAttack.Equals(onLeft) && gameManager.gameState.Equals(GameManager.GameState.Served)) return false;
+
+        // If the ball is on this side of the court and it has not been spiked yet, they can hit it
+        if (gameManager.leftAttack.Equals(onLeft) && !gameManager.gameState.Equals(GameManager.GameState.Spiked)) return true;
+
+        // If the ball is on the other side of the court and has been spiked, they can hit, else they cannot
+        return !gameManager.leftAttack.Equals(onLeft) && gameManager.gameState.Equals(GameManager.GameState.Spiked);
     }
 
     private bool IsAINearBall()
@@ -154,7 +199,7 @@ public class AIBehavior : MonoBehaviour
         // If the AI should move towards the ball
         if (towardsBall)
         {
-            target = ball.transform.position;
+            target = ballManager.goingTo;
         }
 
         // Get the AI's rigidbody
@@ -195,8 +240,9 @@ public class AIBehavior : MonoBehaviour
             bumpToLocation *= -1;
         }
         
-        // Set the ball's intial velocity
+        // Set the ball's intial velocity and destination
         SetBallInitVelocity(ballRb, bumpToLocation, 5.0f);
+        ballManager.goingTo = bumpToLocation;
 
         // Update game manager fields
         gameManager.gameState = GameManager.GameState.Bumped;
@@ -222,8 +268,9 @@ public class AIBehavior : MonoBehaviour
                 setToLocation -= new Vector3(0, 0, 4);
             }
 
-            // Set the ball's initial velocity
+            // Set the ball's initial velocity and destination
             SetBallInitVelocity(ballRb, setToLocation, 6.0f);
+            ballManager.goingTo = setToLocation;
 
             // Update game manager fields
             gameManager.gameState = GameManager.GameState.Set;
@@ -258,12 +305,55 @@ public class AIBehavior : MonoBehaviour
                 spikeToLocation -= new Vector3(0, 0, 4);
             }
 
-            // Set the ball's initial velocity
+            // Set the ball's initial velocity and destination
             SetBallInitVelocity(ballRb, spikeToLocation, -1.0f);
+            ballManager.goingTo = spikeToLocation;
 
             // Update game manager fields
             gameManager.gameState = GameManager.GameState.Spiked;
             gameManager.lastHit = gameObject;
+        }
+        else
+        {
+            Debug.LogWarning("Ball has no Rigidbody component!");
+        }
+    }
+
+    private void ServeBall()
+    {
+        if (ballRb != null)
+        {
+            // Set the serving location to middle-back of court on the rightside as default
+            serveToLocation = new Vector3(8, 0, 0);
+
+            // If rightside is spiking, switch to serve towards leftside
+            if (!onLeft)
+            {
+                serveToLocation *= -1;
+            }
+
+            // Randomly decide to set it elsewhere
+            float rand = UnityEngine.Random.Range(0f, 1f);
+            if (rand < 0.33f)
+            {
+                serveToLocation += new Vector3(0, 0, 4);
+            }
+            else if (rand < 0.66f)
+            {
+                serveToLocation -= new Vector3(0, 0, 4);
+            }
+
+            // Set the ball's initial velocity and destination
+            SetBallInitVelocity(ballRb, serveToLocation, 5.0f);
+            ballManager.goingTo = serveToLocation;
+
+            // Update game manager fields
+            gameManager.gameState = GameManager.GameState.Served;
+            gameManager.lastHit = gameObject;
+            gameManager.leftAttack = onLeft;
+            
+            // Reset timer for serve
+            timeTilServe = 2.0f;
         }
         else
         {
@@ -326,7 +416,7 @@ public class AIBehavior : MonoBehaviour
         if (other.gameObject.layer == 6)
         {
             grounded = true;
-            Debug.Log("AI has landed.");
+            // Debug.Log("AI has landed.");
         }
     }
 

@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     [Header("Game Manager Stuff")]
     public GameState gameState; // State of the match
     public GameObject lastHit; // Player that had the last hit
+    public GameObject server; // Player who serves this point
     public bool leftAttack; // If left is attacking
     public GameObject ball; // Ball object
 
@@ -22,9 +23,13 @@ public class GameManager : MonoBehaviour
     private Vector3 rightPlayer1Origin;
     private Vector3 rightPlayer2Origin;
     private Vector3 ballOrigin;
+    private Vector3 leftServeLocation;
+    private Vector3 rightServeLocation;
 
     public enum GameState
     {
+        PointStart,
+        Served,
         Bumped,
         Set,
         Spiked,
@@ -35,46 +40,50 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         // Set the game state to bumping
-        gameState = GameState.Spiked;
+        gameState = GameState.PointStart;
 
         // Set the last hit to null
         lastHit = null; 
 
+        // Set the server to the first player on the right team
+        server = rightPlayer1;
+        leftAttack = false;
+
         // Get all starting positions of players and ball
-        if (leftPlayer1Origin != null)
+        if (leftPlayer1 != null)
         {
             leftPlayer1Origin = leftPlayer1.transform.position;
         }
         else
         {
-            Debug.LogError("Left player 1 origin not set in inspector for Game Manager!");
+            Debug.LogError("Left player 1 not set in inspector for Game Manager!");
         }
 
-        if (leftPlayer2Origin != null)
+        if (leftPlayer2 != null)
         {
             leftPlayer2Origin = leftPlayer2.transform.position;
         }
         else
         {
-            Debug.LogError("Left player 2 origin not set in inspector for Game Manager!");
+            Debug.LogError("Left player 2 not set in inspector for Game Manager!");
         }
 
-        if (rightPlayer1Origin != null)
+        if (rightPlayer1 != null)
         {
             rightPlayer1Origin = rightPlayer1.transform.position;
         }
         else
         {
-            Debug.LogError("Righ player 1 origin not set in inspector for Game Manager!");
+            Debug.LogError("Right player 1 not set in inspector for Game Manager!");
         }
 
-        if (rightPlayer2Origin != null)
+        if (rightPlayer2 != null)
         {
             rightPlayer2Origin = rightPlayer2.transform.position;
         }
         else
         {
-            Debug.LogError("Right player 2 origin not set in inspector for Game Manager!");
+            Debug.LogError("Right player 2 not set in inspector for Game Manager!");
         }
 
         if (ballOrigin != null)
@@ -85,6 +94,40 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("Ball origin not set in inspector for Game Manager!");
         }
+
+        // Set the locations for the left and right serve location to be just outside of the court
+        leftServeLocation = new Vector3(-10, 1, 0);
+        rightServeLocation = new Vector3(10, 1, 0);
+
+        // Start the point
+        NextPoint();
+    }
+
+    public void RotateServer()
+    {
+        // Order for serve rotation:
+        // 1st: RP1, 2nd: LP1, 3rd: RP2, 4th: LP2, then start over
+        if (server == rightPlayer1)
+        {
+            server = leftPlayer1;
+            leftAttack = true;
+        }
+        else if (server == leftPlayer1)
+        {
+            server = rightPlayer2;
+            leftAttack = false;
+        }
+        else if (server == rightPlayer2)
+        {
+            server = leftPlayer2;
+            leftAttack = true;
+        }
+        else
+        {
+            server = rightPlayer1;
+            leftAttack = false;
+        }
+        Debug.LogFormat("Rotated server: {0}", server);
     }
 
     void OnReset()
@@ -106,8 +149,44 @@ public class GameManager : MonoBehaviour
         ball.GetComponent<Rigidbody>().useGravity = true;
 
         // Reset the game manager fields
-        gameState = GameState.Spiked;
+        gameState = GameState.PointStart;
+        server = rightPlayer1;
         lastHit = null;
         leftAttack = false;
+    }
+
+    public void NextPoint()
+    {
+        // Reset all positions and velocities for all players
+        leftPlayer1.transform.position = leftPlayer1Origin;
+        leftPlayer2.transform.position = leftPlayer2Origin;
+        rightPlayer1.transform.position = rightPlayer1Origin;
+        rightPlayer2.transform.position = rightPlayer2Origin;
+
+        leftPlayer1.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        leftPlayer2.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        rightPlayer1.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        rightPlayer2.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        ball.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+
+        Debug.LogFormat("Left side is attacking: {0}", leftAttack);
+        // Set server's and ball's position
+        if (leftAttack)
+        {
+            server.transform.position = leftServeLocation;
+            ball.transform.position = leftServeLocation + new Vector3(1, 0, 0);
+        }
+        else
+        {
+            server.transform.position = rightServeLocation;
+            ball.transform.position = rightServeLocation - new Vector3(1, 0, 0);
+        }
+
+        // Disable gravity for the ball
+        ball.GetComponent<Rigidbody>().useGravity = false;
+
+        // Reset the game manager fields
+        gameState = GameState.PointStart;
+        lastHit = null;
     }
 }
