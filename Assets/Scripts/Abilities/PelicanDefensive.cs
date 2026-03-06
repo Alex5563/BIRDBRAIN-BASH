@@ -21,7 +21,7 @@ public class PelicanDefensive : MonoBehaviour
         }
         if (isBallEaten && InputSystem.actions.FindAction("Serve").WasPressedThisFrame())
          {
-             Debug.Log("Pelican released the ball!!!!!");
+             Debug.Log("Pelican released the ball manually.");
              if (ball != null)
              {
                  ball.SetActive(true);
@@ -46,10 +46,9 @@ public class PelicanDefensive : MonoBehaviour
         // Only runs if not on cooldown
         if (!onCooldown)
         {
-            Debug.Log("Pelician be eatin the ball!!!!!");
             if (gameManager.gameState.Equals(GameManager.GameState.PointStart) && gameManager.server == gameObject) //add some way to check if the pelican is the one serving
             {
-                Debug.Log("BALL HAS BEEN EATEN");
+                Debug.Log("Pelican has eaten the ball.");
                 if (ball != null)
                 {
                     ballInteract.ServeBall();
@@ -61,7 +60,7 @@ public class PelicanDefensive : MonoBehaviour
             }
         } else
         {
-            Debug.Log("On Cooldown :C");
+            Debug.Log("Pelican Defensive is on cooldown!");
         }
     }
 
@@ -81,5 +80,6 @@ public class PelicanDefensive : MonoBehaviour
         ball.SetActive(true);
         isBallEaten = false;
         ballInteract.ServeBall();
+        Debug.Log("Pelican hold length is up!");
     }
 }
