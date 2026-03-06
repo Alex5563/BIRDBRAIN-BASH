@@ -22510,7 +22510,7 @@ PrefabInstance:
       objectReference: {fileID: 614297107}
     - target: {fileID: 3021669331432449462, guid: 4ba165af8099f0f41aaf098aa2996310, type: 3}
       propertyPath: interactionRadius
-      value: 6
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4554026514862761383, guid: 4ba165af8099f0f41aaf098aa2996310, type: 3}
       propertyPath: m_LocalPosition.x
@@ -23370,7 +23370,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 2
   holdLength: 2
+  ballInteract: {fileID: 7895200595781190008}
+  ball: {fileID: 0}
   gameManager: {fileID: 614297107}
+--- !u!114 &7895200595781190008 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3021669331432449462, guid: 4ba165af8099f0f41aaf098aa2996310, type: 3}
+  m_PrefabInstance: {fileID: 610045261700163267}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7895200595781189983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62a52fa449ea78c439b417bf12bbb9f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!33 &8407379314224814556
 MeshFilter:
   m_ObjectHideFlags: 0

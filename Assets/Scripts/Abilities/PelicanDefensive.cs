@@ -4,13 +4,13 @@ using UnityEngine.InputSystem;
 
 public class PelicanDefensive : MonoBehaviour
 {
-    [SerializeField]
     public float cooldown; // Cooldown in seconds
-    [SerializeField]
     public int holdLength; // Amount the ability increases ally's stats
+    public BallInteract ballInteract;
+    public GameObject ball;
     public GameManager gameManager;
-    private bool _onLeft;
     private bool onCooldown = false;
+    private bool isBallEaten = false;
 
     void Update()
     {
@@ -19,11 +19,26 @@ public class PelicanDefensive : MonoBehaviour
         {
             EatTheBall();
         }
+        if (isBallEaten && InputSystem.actions.FindAction("Serve").WasPressedThisFrame())
+         {
+             Debug.Log("Pelican released the ball!!!!!");
+             if (ball != null)
+             {
+                 ball.SetActive(true);
+                 isBallEaten = false;
+             }
+         }
+        if (isBallEaten)        
+        {
+            ball.transform.position = transform.position + new Vector3(0, 1f, 0);
+        }
+        
     }
     
     public void Start()
     {
-        _onLeft = GetComponent<BallInteract>().onLeft;
+        ballInteract = GetComponent<BallInteract>();
+        ball = GameObject.FindGameObjectWithTag("Ball");
     }
 
     public void EatTheBall()
@@ -32,12 +47,24 @@ public class PelicanDefensive : MonoBehaviour
         if (!onCooldown)
         {
             Debug.Log("Pelician be eatin the ball!!!!!");
-            StartCoroutine(Cooldown());
+            if (gameManager.gameState.Equals(GameManager.GameState.PointStart)) //add some way to check if the pelican is the one serving
+            {
+                Debug.Log("BALL HAS BEEN EATEN");
+                if (ball != null)
+                {
+                    ballInteract.ServeBall();
+                    ball.SetActive(false);
+                    isBallEaten = true;
+                }
+                StartCoroutine(Cooldown());
+            }
         } else
         {
             Debug.Log("On Cooldown :C");
         }
     }
+
+    
 
     // Cools down cooldown seconds
     public IEnumerator Cooldown()
