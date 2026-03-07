@@ -29,6 +29,7 @@ public class CharacterMovement : MonoBehaviour
     private bool canMove = false; // christofort: defaulted to false, ability scripts must set this to true
     private PenguinScript penguinScript; // Reference to penguin dash script
     private ParticleSystem dustParticles; // Reference to particle system for ground dust
+    private PlayerInput playerInput; // Input for the player
     
     [HideInInspector] public bool overrideRotation = false; // Allow other scripts to override rotation
     [HideInInspector] public Quaternion targetRotation; // Target rotation when overridden
@@ -37,6 +38,7 @@ public class CharacterMovement : MonoBehaviour
     void Start()
     {
         // Get the Rigidbody of the character
+        playerInput = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody>();
         penguinScript = GetComponent<PenguinScript>();
         dustParticles = GetComponent<ParticleSystem>();
@@ -60,7 +62,7 @@ public class CharacterMovement : MonoBehaviour
     void FixedUpdate()
     {
         // Check for player inputs for lateral movement
-        Vector2 inputDirection = InputSystem.actions.FindAction("Move").ReadValue<Vector2>();
+        Vector2 inputDirection = playerInput.actions.FindAction("Move").ReadValue<Vector2>();
 
         // Don't process movement input if penguin is dashing
         bool isDashing = penguinScript != null && penguinScript.isDashing;
@@ -115,7 +117,7 @@ public class CharacterMovement : MonoBehaviour
         }
 
         // Check for player input for vertical movement
-        InputAction jump = InputSystem.actions.FindAction("Jump");
+        InputAction jump = playerInput.actions.FindAction("Jump");
 
         // If character touching ground AND player presses jump button, character jumps
         // christofort: addded a check for canJump to prevent jumping if ability script hasn't allowed for it

@@ -29,12 +29,14 @@ public class BallInteract : MonoBehaviour
     private Vector3 blockToLocation; // Where the ball will go after blocking
     private CharacterMovement serverMovement; //Christofort: Track the server's movement from character movement script
     private float baseSpikeSpeed; // Speed of the ball when spiked
+    private PlayerInput playerInput; // Input for this specific player
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         serverMovement = GetComponent<CharacterMovement>(); // christofort: gets the character movement script
+        playerInput = GetComponent<PlayerInput>();
         baseSpikeSpeed = 10.0f;
         
         ball = GameObject.FindGameObjectWithTag("Ball");
@@ -53,12 +55,13 @@ public class BallInteract : MonoBehaviour
 
         if (ballManager == null)
         {
-            Debug.LogError("Ball Manager was not set in inspector for BallInteract!");
+            ballManager = ball.GetComponent<BallManager>();
         }
 
+        // If not assigned in scene, try to find the game manager
         if (gameManager == null)
         {
-            Debug.LogError("Game manager was not found in BallInteract!");
+            gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
 
         // locate contact point child safely
@@ -125,7 +128,7 @@ public class BallInteract : MonoBehaviour
     private void CheckState()
     {
         // Offensive ability activation (Toucan): allow activation regardless of CanHit()
-        if (InputSystem.actions.FindAction("Offensive Ability").WasPressedThisFrame())
+        if (playerInput.actions.FindAction("Offensive Ability").WasPressedThisFrame())
         {
             ToucanOffensive toucan = GetComponent<ToucanOffensive>();
             if (toucan != null)
@@ -143,13 +146,13 @@ public class BallInteract : MonoBehaviour
                 case GameManager.GameState.Spiked:
                     // EJ: Since ball can't be blocked on the serve this check can't be related to "Served"
                     // EJ: Moved "Served" to a check by itself and check to bump twice                
-                    if (IsPlayerNearBall() && IsPlayerNearNet() && InputSystem.actions.FindAction("Block").WasPressedThisFrame())
+                    if (IsPlayerNearBall() && IsPlayerNearNet() && playerInput.actions.FindAction("Block").WasPressedThisFrame())
                     {
                         BlockBall();
                     }
                     
                     // If the player is close enough to the ball and is pressing the bump button, bump the ball
-                    else if (IsPlayerNearBall() && InputSystem.actions.FindAction("Bump").WasPressedThisFrame())
+                    else if (IsPlayerNearBall() && playerInput.actions.FindAction("Bump").WasPressedThisFrame())
                     {
                         BumpBall();
                     }
@@ -157,7 +160,7 @@ public class BallInteract : MonoBehaviour
 
                 case GameManager.GameState.Served:
                     // If the player is close enough to the ball and is pressing the bump button, bump the ball
-                    if (IsPlayerNearBall() && InputSystem.actions.FindAction("Bump").WasPressedThisFrame())
+                    if (IsPlayerNearBall() && playerInput.actions.FindAction("Bump").WasPressedThisFrame())
                     {
                         BumpBall();
                     }
@@ -165,7 +168,7 @@ public class BallInteract : MonoBehaviour
                 // Ball has just been bumped
                 case GameManager.GameState.Bumped:
                     // If the player is close enough to the ball and is pressing the set button, set the ball
-                    if (IsPlayerNearBall() && InputSystem.actions.FindAction("Set").WasPressedThisFrame())
+                    if (IsPlayerNearBall() && playerInput.actions.FindAction("Set").WasPressedThisFrame())
                     {
                         SetBall();
                     }
@@ -173,7 +176,7 @@ public class BallInteract : MonoBehaviour
                 // Ball has just been set
                 case GameManager.GameState.Set:
                     // If the player is close enough to the ball and is pressing the spike button, spike the ball
-                    if (IsPlayerNearBall() && InputSystem.actions.FindAction("Spike").WasPressedThisFrame())
+                    if (IsPlayerNearBall() && playerInput.actions.FindAction("Spike").WasPressedThisFrame())
                     {
                         SpikeBall();
                     }
@@ -195,7 +198,7 @@ public class BallInteract : MonoBehaviour
                         serverMovement.targetRotation = baseRotation;
                     }
                     // If this player is the one serving and they press the serve button, serve the ball
-                    if (gameManager.server == gameObject && InputSystem.actions.FindAction("Serve").WasPressedThisFrame())
+                    if (gameManager.server == gameObject && playerInput.actions.FindAction("Serve").WasPressedThisFrame())
                     {
                         ServeBall();
                     }
@@ -271,7 +274,7 @@ public class BallInteract : MonoBehaviour
         }
 
         // Get the direction value
-        Vector2 dir = InputSystem.actions.FindAction("Direction").ReadValue<Vector2>();
+        Vector2 dir = playerInput.actions.FindAction("Direction").ReadValue<Vector2>();
         Debug.LogFormat("ServeToLocation before checking direction: {0}", setToLocation);
 
         // If player wants to set towards top or bottom, update set to location
@@ -316,7 +319,7 @@ public class BallInteract : MonoBehaviour
         }
 
         // Get the direction value
-        Vector2 dir = InputSystem.actions.FindAction("Direction").ReadValue<Vector2>();
+        Vector2 dir = playerInput.actions.FindAction("Direction").ReadValue<Vector2>();
 
         // If player wants to spike towards top or bottom, update set to location
         if (dir.y < -0.64f)
@@ -367,7 +370,7 @@ public class BallInteract : MonoBehaviour
         }
 
         // Get the direction value
-        Vector2 dir = InputSystem.actions.FindAction("Direction").ReadValue<Vector2>();
+        Vector2 dir = playerInput.actions.FindAction("Direction").ReadValue<Vector2>();
 
         // If player wants to set towards top or bottom, update set to location
         if (dir.y < -0.64f)
@@ -420,7 +423,7 @@ public class BallInteract : MonoBehaviour
         if (onLeft) blockToLocation *= -1;
 
         // directional control
-        Vector2 dir = InputSystem.actions.FindAction("Direction").ReadValue<Vector2>();
+        Vector2 dir = playerInput.actions.FindAction("Direction").ReadValue<Vector2>();
 
         if (dir.y < -0.64f) blockToLocation.z -= 3f;
         else if (dir.y > 0.64f) blockToLocation.z += 3f;
