@@ -72,10 +72,16 @@ public class AIBehavior : MonoBehaviour
         // Get particle system for ground dust
         dustParticles = GetComponent<ParticleSystem>();
 
-        contactPoint = transform.Find("ContactPoint").transform;
-        if (contactPoint == null)
+        // locate contact point child safely
+        var cpTrans = transform.Find("ContactPoint");
+        if (cpTrans != null)
         {
-            Debug.LogErrorFormat("Could not find contact point for {0}.", transform.name);
+            contactPoint = cpTrans;
+        }
+        else
+        {
+            Debug.LogErrorFormat("Could not find contact point for {0}. Using root as fallback.", transform.name);
+            contactPoint = transform;
         }
         
         // Check animator
@@ -260,7 +266,18 @@ public class AIBehavior : MonoBehaviour
     // Check if the AI is near the ball
     private bool IsAINearBall()
     {
-        // Get the distance the AI is from the ball, return whether it is less than or equal that interation radius
+        // guard against missing references
+        if (ball == null)
+        {
+            Debug.LogWarning("AIBehavior.IsAINearBall called but ball is null");
+            return false;
+        }
+        if (contactPoint == null)
+        {
+            Debug.LogWarning("AIBehavior contactPoint missing");
+            return false;
+        }
+        // Get the distance the AI is from the ball, return whether it is less than or equal that interaction radius
         float distance = Vector3.Distance(contactPoint.position, ball.transform.position);
         return distance <= interactionRadius;
     }
@@ -586,8 +603,7 @@ public class AIBehavior : MonoBehaviour
         // Trigger serve animation
         if (animator != null)
         {
-            Debug.Log("Setting Serve trigger!");
-            animator.SetTrigger("Serve");
+            animator.SetTrigger("Spike");
         }
         
         // Reset timer for serve

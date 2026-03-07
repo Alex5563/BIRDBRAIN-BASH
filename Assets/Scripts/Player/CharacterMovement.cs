@@ -9,6 +9,13 @@ public class CharacterMovement : MonoBehaviour
     public float maxAirSpeed = 1.0f; // Max speed that the character can move in the air
     public float jumpForce = 1.0f; // Force the character uses to jump 
     public float rotationSpeed = 10.0f; // How fast the character rotates to face movement direction
+    [Tooltip("Euler offset applied to facing rotation. Use this if the model's forward axis isn't aligned with world +Z.")]
+    public Vector3 rotationOffsetEuler = Vector3.zero; // local rotation adjustment for the prefab 
+    
+    [Header("Animation")]
+    public Animator animator; // optional animator for player character
+    private bool isWalking = false; // computed each frame for animation
+
     private float directionChangeWeight = 15f; // How quickly the character can change direction
     private Coroutine buffCoroutine; // Reference to the currently active buff coroutine
     private float originalMaxGroundSpeed = 1.0f; // Original max ground speed before buff
@@ -33,6 +40,20 @@ public class CharacterMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         penguinScript = GetComponent<PenguinScript>();
         dustParticles = GetComponent<ParticleSystem>();
+
+        // grab animator if not assigned in inspector (mirrors AIBehavior logic)
+        if (animator == null)
+        {
+            animator = GetComponent<Animator>();
+            if (animator == null)
+            {
+                animator = GetComponentInChildren<Animator>();
+            }
+            if (animator == null)
+            {
+                animator = GetComponentInParent<Animator>();
+            }
+        }
     }
 
     // Update is called once per frame
@@ -70,7 +91,12 @@ public class CharacterMovement : MonoBehaviour
             if (!overrideRotation && inputDirection.magnitude > 0.1f)
             {
                 Vector3 movementDirection = new Vector3(inputDirection.x, 0, inputDirection.y);
-                targetRotation = Quaternion.LookRotation(movementDirection);
+                Quaternion baseRotation = Quaternion.LookRotation(movementDirection);
+                if (rotationOffsetEuler != Vector3.zero)
+                {
+                    baseRotation *= Quaternion.Euler(rotationOffsetEuler);
+                }
+                targetRotation = baseRotation;
             }
         }
         
@@ -78,6 +104,14 @@ public class CharacterMovement : MonoBehaviour
         if (!overrideRotation || Vector3.Distance(transform.eulerAngles, targetRotation.eulerAngles) > 0.1f)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+        }
+
+        // update walking flag for animator
+        Rigidbody localRb = rb; // alias for clarity
+        isWalking = new Vector2(localRb.linearVelocity.x, localRb.linearVelocity.z).magnitude > 0.1f;
+        if (animator != null)
+        {
+            animator.SetBool("isWalking", isWalking);
         }
 
         // Check for player input for vertical movement

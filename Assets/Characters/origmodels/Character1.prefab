@@ -198,6 +198,7 @@ MonoBehaviour:
   dashSpeed: 10
   rotationSpeed: 8
   penguinHeight: 0
+  gameManager: {fileID: 0}
   isDashing: 0
 --- !u!198 &6065089389504254323
 ParticleSystem:

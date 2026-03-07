@@ -12,6 +12,9 @@ public class BallInteract : MonoBehaviour
     public BallManager ballManager; // Manager of the ball
     public float interactionRadius = 5f; // How far the ball can be from the player to interact with it
 
+    [Header("Animation")]
+    public Animator animator; // animator for player
+
     [Header("Spike Stat")]
     public float spikeStat; //Spiking power for the bird
     
@@ -58,17 +61,43 @@ public class BallInteract : MonoBehaviour
             Debug.LogError("Game manager was not found in BallInteract!");
         }
 
-        contactPoint = transform.Find("ContactPoint").transform;
-        if (contactPoint == null)
+        // locate contact point child safely
+        var cpTransform = transform.Find("ContactPoint");
+        if (cpTransform != null)
         {
-            Debug.LogErrorFormat("Could not find contact point for {0}.", transform.name);
+            contactPoint = cpTransform;
         }
+        else
+        {
+            Debug.LogErrorFormat("Could not find contact point for {0}. Using root transform instead.", transform.name);
+            contactPoint = transform; // fallback to avoid null reference
+        }
+
+        // animator fallback (same pattern as AIBehavior)
+        if (animator == null)
+        {
+            animator = GetComponent<Animator>();
+            if (animator == null)
+            {
+                animator = GetComponentInChildren<Animator>();
+            }
+            if (animator == null)
+            {
+                animator = GetComponentInParent<Animator>();
+            }
+        }
+
     }
 
     // If the player is near the ball
     private bool IsPlayerNearBall()
     {
         if (ball == null) return false;
+        if (contactPoint == null)
+        {
+            Debug.LogWarning("ContactPoint missing in BallInteract");
+            return false;
+        }
         
         float distance = Vector3.Distance(contactPoint.position, ball.transform.position);
         return distance <= interactionRadius;
@@ -82,6 +111,13 @@ public class BallInteract : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Keep ball completely still before serve
+        if (gameManager != null && gameManager.gameState == GameManager.GameState.PointStart && ballRb != null)
+        {
+            ballRb.linearVelocity = Vector3.zero;
+            ballRb.useGravity = false;
+        }
+
         CheckState();
     }
 
@@ -148,6 +184,15 @@ public class BallInteract : MonoBehaviour
                     if (gameManager.server == gameObject)
                     {
                         serverMovement.controlMovement(false,true);
+                        // Force player to face forward toward the net, accounting for rotation offset
+                        serverMovement.overrideRotation = true;
+                        Vector3 forwardDir = onLeft ? Vector3.right : Vector3.left;
+                        Quaternion baseRotation = Quaternion.LookRotation(forwardDir);
+                        if (serverMovement.rotationOffsetEuler != Vector3.zero)
+                        {
+                            baseRotation *= Quaternion.Euler(serverMovement.rotationOffsetEuler);
+                        }
+                        serverMovement.targetRotation = baseRotation;
                     }
                     // If this player is the one serving and they press the serve button, serve the ball
                     if (gameManager.server == gameObject && InputSystem.actions.FindAction("Serve").WasPressedThisFrame())
@@ -208,6 +253,11 @@ public class BallInteract : MonoBehaviour
         gameManager.gameState = GameManager.GameState.Bumped;
         gameManager.lastHit = gameObject;
         gameManager.leftAttack = onLeft;
+        // trigger animation
+        if (animator != null)
+        {
+            animator.SetTrigger("Bump");
+        }
     }
 
     // Set the ball
@@ -247,6 +297,10 @@ public class BallInteract : MonoBehaviour
         // Update game manager fields
         gameManager.gameState = GameManager.GameState.Set;
         gameManager.lastHit = gameObject;
+        if (animator != null)
+        {
+            animator.SetTrigger("Set");
+        }
     }
 
     // Spike the ball
@@ -295,6 +349,10 @@ public class BallInteract : MonoBehaviour
         // Update game manager fields
         gameManager.gameState = GameManager.GameState.Spiked;
         gameManager.lastHit = gameObject;
+        if (animator != null)
+        {
+            animator.SetTrigger("Spike");
+        }
     }
 
     public void ServeBall()
@@ -334,6 +392,11 @@ public class BallInteract : MonoBehaviour
         gameManager.lastHit = gameObject;
         gameManager.leftAttack = onLeft;
         serverMovement.controlMovement(true,true); // christofort: let the server move after gameState updates
+        serverMovement.overrideRotation = false; // allow normal rotation after serve
+        if (animator != null)
+        {
+            animator.SetTrigger("Spike");
+        }
     }
 
     private void BlockBall()
@@ -371,6 +434,10 @@ public class BallInteract : MonoBehaviour
         gameManager.gameState = GameManager.GameState.Blocked;
         gameManager.lastHit = gameObject;
         gameManager.leftAttack = onLeft;
+        if (animator != null)
+        {
+            animator.SetTrigger("Block");
+        }
     }
 
     // Setting the ball's velocity when interacting with it
