@@ -300,7 +300,7 @@ public class BallInteract : MonoBehaviour
         gameManager.lastHit = gameObject;
     }
 
-    private void ServeBall()
+    public void ServeBall()
     {
         // Set the serving location to middle-back of court on the rightside as default
         serveToLocation = new Vector3(8, 0, 0);
