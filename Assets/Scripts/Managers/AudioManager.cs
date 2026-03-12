@@ -7,6 +7,9 @@ public enum BirdType
     SCISSORTAIL,
     LOVEBIRD,
     DODO,
+    PELICAN,
+    SEAGULL,
+    OWL,
     OTHER
 }
 
@@ -31,6 +34,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip[] scissortailSounds;
     [SerializeField] private AudioClip[] lovebirdSounds;
     [SerializeField] private AudioClip[] dodoSounds;
+    [SerializeField] private AudioClip[] seagullSounds;
 
     [Header("Scoring Sounds")]
     [SerializeField] private AudioClip[] scoringSounds;
@@ -86,6 +90,9 @@ public class AudioManager : MonoBehaviour
                 break;
             case BirdType.DODO:
                 birdSounds = instance.dodoSounds;
+                break;
+            case BirdType.SEAGULL:
+                birdSounds = instance.seagullSounds;
                 break;
             default:
                 birdSounds = instance.penguinSounds;

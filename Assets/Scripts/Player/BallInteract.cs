@@ -18,7 +18,14 @@ public class BallInteract : MonoBehaviour
     [Header("Spike Stat")]
     public float spikeStat; //Spiking power for the bird
     
-    [SerializeField] private BirdType birdType; // Type of the bird for audio noises
+    [Header("Bird Selection")]
+    [SerializeField] private BirdType birdType = BirdType.PENGUIN; // Type of the bird for audio noises; default to penguin
+
+    // Change the birdType from other managers
+    public void SetBirdType(BirdType type) { birdType = type; }
+
+    // EJ: need read-only access to the current bird type for other scripts
+    public BirdType GetBirdType() => birdType;
     private Transform contactPoint; // Reference for interaction radius
     private GameObject ball; // Game object for the ball
     private Rigidbody ballRb; // Rigid body for the ball

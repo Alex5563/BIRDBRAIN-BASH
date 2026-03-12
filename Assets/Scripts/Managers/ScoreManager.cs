@@ -68,8 +68,8 @@ public class ScoreManager : MonoBehaviour
             inPlay = false;
             Debug.Log("side 2 scored! points: " + side2Score);
             LeftScored.Invoke();
-            PlaySounds(false);
-            CheckWinSet(false);
+            PlaySounds(true);
+            CheckWinSet(true);
         } 
         // if it touches side 2, then side 1 scores
         else if (collision.gameObject.CompareTag("Side2") && inPlay) 
@@ -79,8 +79,8 @@ public class ScoreManager : MonoBehaviour
             inPlay = false;
             Debug.Log("side 1 scored! points: " + side1Score);
             RightScored.Invoke();
-            PlaySounds(true);
-            CheckWinSet(true);
+            PlaySounds(false);
+            CheckWinSet(false);
         }
 
         // ducky: If ball goes out, run coroutine in case out collision was registered before court collision
@@ -105,8 +105,8 @@ public class ScoreManager : MonoBehaviour
                 side1ScoreUI.text = side1Score.ToString();
                 inPlay = false;
                 Debug.Log("Out! side 1 scored! points: " + side1Score);
-                PlaySounds(false);
-                CheckWinSet(false);
+                PlaySounds(true);
+                CheckWinSet(true);
             }
 
             // Right side scores
@@ -116,8 +116,8 @@ public class ScoreManager : MonoBehaviour
                 side2ScoreUI.text = side2Score.ToString();
                 inPlay = false;
                 Debug.Log("Out! side 2 scored! points: " + side2Score);
-                PlaySounds(true);
-                CheckWinSet(true);
+                PlaySounds(false);
+                CheckWinSet(false);
             }
         }
     }

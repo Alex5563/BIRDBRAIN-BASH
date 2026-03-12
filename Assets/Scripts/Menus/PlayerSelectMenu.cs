@@ -11,6 +11,9 @@ public class PlayerSelectMenu : MonoBehaviour
 
     [Header("Input Select Menu")]
     [SerializeField] private GameObject inputSelectMenu;
+    
+    [Header("Character Select Scene")]
+    [SerializeField] private string characterSelectSceneName = "AlexaCharSelect";
 
     private int numPlayers;
     private List<bool> isKBMInput = new List<bool>();
@@ -109,8 +112,8 @@ public class PlayerSelectMenu : MonoBehaviour
             // Share the input information with the multiplayer manager
             DataTransferManager.isKBMInput = isKBMInput;
 
-            // Go to the game scene
-            SceneManager.LoadScene("RodericM2");
+            // Go to the character select scene so players can pick characters
+            SceneManager.LoadScene(characterSelectSceneName);
         }
         else
         {
