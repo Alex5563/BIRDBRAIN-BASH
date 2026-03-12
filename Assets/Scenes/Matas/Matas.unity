@@ -281,7 +281,7 @@ MonoBehaviour:
   side2SetUI: {fileID: 0}
   side1ServeIndicator: {fileID: 0}
   side2ServeIndicator: {fileID: 0}
-  rightBirdType1: 1
+  rightBirdType1: 4
 --- !u!114 &18352594
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -297,6 +297,7 @@ MonoBehaviour:
   goingTo: {x: 0, y: 0, z: 0}
   gameManager: {fileID: 614297107}
   unblockableOwner: {fileID: 0}
+  offCourse: 0
 --- !u!1001 &115471591
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -471,6 +472,7 @@ MonoBehaviour:
   onLeft: 1
   ballManager: {fileID: 18352594}
   interactionRadius: 2
+  animator: {fileID: 0}
   maxGroundSpeed: 4
   maxAirSpeed: 2
   jumpForce: 6
@@ -1542,6 +1544,13 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9db36db339303c449beffa804ad38b1b, type: 3}
   scissortailSounds: []
   lovebirdSounds: []
+  dodoSounds:
+  - {fileID: 8300000, guid: 06820743357e1fc46b505b245b2e4bb2, type: 3}
+  - {fileID: 8300000, guid: 43a0afa8660b6b8438d9f3250ae7e70f, type: 3}
+  - {fileID: 8300000, guid: ec9afd87008d88c4c8b2b8c886d9f8df, type: 3}
+  - {fileID: 8300000, guid: 214e2f58495c60c48927f64d39e2d91d, type: 3}
+  - {fileID: 8300000, guid: 50875c8f4d581a04aa12bdbfa8346ac9, type: 3}
+  - {fileID: 8300000, guid: 8500534685f712f40b5f349a9300b88f, type: 3}
   scoringSounds: []
   ballPlayerInteractionSounds: []
   ballNetHitSounds: []
@@ -2178,6 +2187,7 @@ MonoBehaviour:
   onLeft: 1
   ballManager: {fileID: 18352594}
   interactionRadius: 2
+  animator: {fileID: 0}
   maxGroundSpeed: 4
   maxAirSpeed: 2
   jumpForce: 6
@@ -2518,6 +2528,7 @@ MonoBehaviour:
   onLeft: 0
   ballManager: {fileID: 18352594}
   interactionRadius: 2
+  animator: {fileID: 0}
   maxGroundSpeed: 4
   maxAirSpeed: 2
   jumpForce: 6
@@ -2694,7 +2705,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3021669331432449462, guid: 4ba165af8099f0f41aaf098aa2996310, type: 3}
       propertyPath: birdType
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3021669331432449462, guid: 4ba165af8099f0f41aaf098aa2996310, type: 3}
       propertyPath: ballManager
@@ -2806,7 +2817,6 @@ MonoBehaviour:
   buffAmount: 3
   buffLength: 7
   coin: {fileID: 1090145823125685694, guid: 8f44a91b09bbe9847bec887c0f5b7f6d, type: 3}
-  player: {fileID: 7895200595781189983}
   gameManager: {fileID: 614297107}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

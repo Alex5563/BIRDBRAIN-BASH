@@ -280,7 +280,7 @@ MonoBehaviour:
   side2SetUI: {fileID: 136761182}
   side1ServeIndicator: {fileID: 0}
   side2ServeIndicator: {fileID: 0}
-  rightBirdType1: 1
+  rightBirdType1: 4
 --- !u!114 &18352594
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -296,6 +296,7 @@ MonoBehaviour:
   goingTo: {x: 0, y: 0, z: 0}
   gameManager: {fileID: 614297107}
   unblockableOwner: {fileID: 0}
+  offCourse: 0
 --- !u!1 &49572306
 GameObject:
   m_ObjectHideFlags: 0
@@ -884,6 +885,7 @@ MonoBehaviour:
   onLeft: 1
   ballManager: {fileID: 18352594}
   interactionRadius: 2
+  animator: {fileID: 0}
   maxGroundSpeed: 4
   maxAirSpeed: 2
   jumpForce: 6
@@ -13343,6 +13345,15 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 8300000, guid: 11c62da8e049ea545a35e2da331f8bbf, type: 3}
+  dodoSounds:
+  - {fileID: 8300000, guid: 06820743357e1fc46b505b245b2e4bb2, type: 3}
+  - {fileID: 8300000, guid: 43a0afa8660b6b8438d9f3250ae7e70f, type: 3}
+  - {fileID: 8300000, guid: ec9afd87008d88c4c8b2b8c886d9f8df, type: 3}
+  - {fileID: 8300000, guid: 214e2f58495c60c48927f64d39e2d91d, type: 3}
+  - {fileID: 8300000, guid: 50875c8f4d581a04aa12bdbfa8346ac9, type: 3}
+  - {fileID: 0}
+  - {fileID: 8300000, guid: 8500534685f712f40b5f349a9300b88f, type: 3}
+  - {fileID: 8300000, guid: 8500534685f712f40b5f349a9300b88f, type: 3}
   scoringSounds:
   - {fileID: 8300000, guid: eb33c0f9c80807641add146b4c6d0873, type: 3}
   ballPlayerInteractionSounds:
@@ -19905,6 +19916,7 @@ MonoBehaviour:
   onLeft: 1
   ballManager: {fileID: 18352594}
   interactionRadius: 2
+  animator: {fileID: 0}
   maxGroundSpeed: 4
   maxAirSpeed: 2
   jumpForce: 6
@@ -21176,6 +21188,7 @@ MonoBehaviour:
   onLeft: 0
   ballManager: {fileID: 18352594}
   interactionRadius: 2
+  animator: {fileID: 0}
   maxGroundSpeed: 4
   maxAirSpeed: 2
   jumpForce: 6
@@ -22445,7 +22458,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3021669331432449462, guid: 4ba165af8099f0f41aaf098aa2996310, type: 3}
       propertyPath: birdType
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3021669331432449462, guid: 4ba165af8099f0f41aaf098aa2996310, type: 3}
       propertyPath: ballManager
