@@ -1,13 +1,36 @@
 using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class CrowOffensive : MonoBehaviour {
+public class CrowOffensive : BirdAbility {
     [SerializeField]
     public float cooldown = 10f;
     [SerializeField]
     public float timeEnemiesAreImpacted = 3f;
 
+    [SerializeField] private GameManager gameManager;
     private bool onCooldown = false;
+    private PlayerInput input; // Input for the player
+
+    void Start()
+    {
+        input = GetComponent<PlayerInput>();
+
+        if (gameManager == null)
+        {
+            gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        }
+    }
+
+    void Update()
+    {
+        if (!onCooldown && input.actions.FindAction("Offensive Ability").WasPressedThisFrame() && canUseAbilities())
+        {
+            crowAbility();
+        }
+    }
 
     public void crowAbility() {
         if (onCooldown) {
@@ -18,12 +41,30 @@ public class CrowOffensive : MonoBehaviour {
         StartCoroutine(Cooldown());
     }
     IEnumerator DisableEnemies() {
-        EnemyAbility[] enemies = FindObjectsOfType<EnemyAbility>();
-        foreach (EnemyAbility enemy in enemies) {
-            enemy.disableAbilities(true);
+        // Determine which birds are on other team
+        List<BirdAbility> enemyAbilities = new List<BirdAbility>();
+        if (gameManager.leftPlayer1 == this || gameManager.leftPlayer2 == this)
+        {
+            enemyAbilities.AddRange(gameManager.rightPlayer1.GetComponents<BirdAbility>());
+            enemyAbilities.AddRange(gameManager.rightPlayer2.GetComponents<BirdAbility>());
         }
+        else
+        {
+            enemyAbilities.AddRange(gameManager.leftPlayer1.GetComponents<BirdAbility>());
+            enemyAbilities.AddRange(gameManager.leftPlayer2.GetComponents<BirdAbility>());
+        }
+
+        // Disable all the enemies abilities
+        foreach (BirdAbility enemy in enemyAbilities) {
+            enemy.disableAbilities(true);
+            Debug.Log(enemy);
+        }
+
+        // Wait for ability to end
         yield return new WaitForSeconds(timeEnemiesAreImpacted);
-        foreach (EnemyAbility enemy in enemies) {
+
+        // Enable all the enemies abilities
+        foreach (BirdAbility enemy in enemyAbilities) {
             enemy.disableAbilities(false);
         }
         Debug.Log("Abilities of enemies have been restored");

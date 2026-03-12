@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyAbility : MonoBehaviour {
+public class BirdAbility : MonoBehaviour {
     private bool abilitiesDisabled = false;
     public void disableAbilities(bool disabledOrNot) {
         abilitiesDisabled = disabledOrNot;

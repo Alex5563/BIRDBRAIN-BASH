@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ToucanDefensive : MonoBehaviour
+public class ToucanDefensive : BirdAbility
 {
     [SerializeField]
     public float cooldown; // Cooldown in seconds
@@ -19,7 +19,7 @@ public class ToucanDefensive : MonoBehaviour
     void Update()
     {
         // If pressesd defensive ability button, activate ability
-        if (playerInput.actions.FindAction("Defensive Ability").WasPressedThisFrame())
+        if (canUseAbilities() && playerInput.actions.FindAction("Defensive Ability").WasPressedThisFrame())
         {
             TouCanDoIt();
         }

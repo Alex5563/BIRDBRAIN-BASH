@@ -1,8 +1,7 @@
 using UnityEngine;
-using UnityEngine.Analytics;
 using UnityEngine.InputSystem;
 
-public class PenguinScript : MonoBehaviour
+public class PenguinScript : BirdAbility
 {
     [Header("Dash Ability")]
     public float dashCooldown = 5.0f; 
@@ -48,7 +47,7 @@ public class PenguinScript : MonoBehaviour
         
         penguinHeight = transform.position.y; //christofort: grabs the Y value of the penguin
         // chrIStofort: added a check for the penguin's y value, to make sure it isn't higher than the ground
-        if (dashPressed && validGamestate && cooldownTimer <= 0 && !isDashing && characterMovement.grounded)
+        if (dashPressed && validGamestate && cooldownTimer <= 0 && !isDashing && characterMovement.grounded && canUseAbilities())
         {
             StartDash();
         }

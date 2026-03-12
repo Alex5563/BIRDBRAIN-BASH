@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(BallInteract))]
-public class SeagullOffensive : EnemyAbility
+public class SeagullOffensive : BirdAbility
 {
     public int debuffLength; // Length of debuff in seconds
     public int debuffAmount; // Amount the debuff will DECREASE stats

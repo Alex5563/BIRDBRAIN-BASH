@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PelicanDefensive : MonoBehaviour
+public class PelicanDefensive : BirdAbility
 {
     public float cooldown; // Cooldown in seconds
     public int holdLength; // Amount the ability increases ally's stats
@@ -15,7 +15,7 @@ public class PelicanDefensive : MonoBehaviour
     void Update()
     {
         // If pressesd defensive ability button, activate ability
-        if (InputSystem.actions.FindAction("Defensive Ability").WasPressedThisFrame())
+        if (!onCooldown && InputSystem.actions.FindAction("Defensive Ability").WasPressedThisFrame() && canUseAbilities())
         {
             EatTheBall();
         }

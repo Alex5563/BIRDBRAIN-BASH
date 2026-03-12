@@ -1,9 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
-using Unity.VisualScripting;
 
-public class LovebirdDefensive : MonoBehaviour
+public class LovebirdDefensive : BirdAbility
 {
     [Header("Romantic Rush")]
     public GameManager gameManager;
@@ -87,7 +86,8 @@ public class LovebirdDefensive : MonoBehaviour
 
     void Update()
     {
-        if (playerInput.actions.FindAction("Defensive Ability").WasPressedThisFrame() && abilityReady && !gameManager.gameState.Equals(GameManager.GameState.PointStart))
+        if (playerInput.actions.FindAction("Defensive Ability").WasPressedThisFrame() && abilityReady 
+            && !gameManager.gameState.Equals(GameManager.GameState.PointStart) && canUseAbilities())
         {
             ActivateAbility();
         }

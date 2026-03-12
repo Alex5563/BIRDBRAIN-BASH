@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class ToucanOffensive : EnemyAbility
+public class ToucanOffensive : BirdAbility
 {
     [SerializeField]
     public float cooldown = 10f; // Cooldown in seconds (TBA)
