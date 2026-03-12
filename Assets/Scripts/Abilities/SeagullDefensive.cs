@@ -1,9 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SocialPlatforms.Impl;
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class NewMonoBehaviourScript : BirdAbility
 {
     [Header("Mine Mine Mine Ability")]
     public GameManager gameManager;
@@ -40,6 +39,12 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
         //Block ability if the ball has already been served by your side
         if (gameManager.gameState == GameManager.GameState.Served && gameManager.server == gameObject)
+        {
+            return;
+        }
+
+        // Block ability if cannot use abilities
+        if (!canUseAbilities())
         {
             return;
         }

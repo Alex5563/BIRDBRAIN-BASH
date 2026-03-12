@@ -1,9 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
-using Unity.VisualScripting;
 
-public class LovebirdDefensive : MonoBehaviour
+public class LovebirdDefensive : BirdAbility
 {
     [Header("Romantic Rush")]
     public GameManager gameManager;
@@ -28,7 +27,7 @@ public class LovebirdDefensive : MonoBehaviour
 
     public void ActivateAbility()
     {
-        if (abilityReady)
+        if (abilityReady && playerInput.actions.FindAction("Defensive Ability").WasPressedThisFrame())
         {
             StartCoroutine(RomanticRush());
             abilityReady = false;
@@ -68,6 +67,7 @@ public class LovebirdDefensive : MonoBehaviour
         {
             yield break;
         }
+        Debug.Log("Dashing towards ally...");
         // Continues moving as long as the distance is within 1 unit
         while (Vector3.Distance(transform.position, ally.transform.position) > dashToDistance)
         {
@@ -86,7 +86,8 @@ public class LovebirdDefensive : MonoBehaviour
 
     void Update()
     {
-        if (playerInput.actions.FindAction("Defensive Ability").WasPressedThisFrame() && abilityReady && !gameManager.gameState.Equals(GameManager.GameState.PointStart))
+        if (playerInput.actions.FindAction("Defensive Ability").WasPressedThisFrame() && abilityReady 
+            && !gameManager.gameState.Equals(GameManager.GameState.PointStart) && canUseAbilities())
         {
             ActivateAbility();
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CrowDefensiveAbility : MonoBehaviour
+public class CrowDefensiveAbility : BirdAbility
 {
     public float cooldownTime; // Cooldown in seconds
     public float cooldownTimer; // Timer to track cooldown
@@ -30,7 +30,7 @@ public class CrowDefensiveAbility : MonoBehaviour
     {
         //Check if conditions are met to activate ability
         InputAction statBuff = playerInput.actions.FindAction("Defensive Ability");
-        if (!onCooldown && !gameManager.gameState.Equals(GameManager.GameState.PointStart)
+        if (!onCooldown && !gameManager.gameState.Equals(GameManager.GameState.PointStart) && canUseAbilities()
             && !gameManager.gameState.Equals(GameManager.GameState.PointEnd) && statBuff.WasPressedThisFrame())
         {
             CrowDefCall();
