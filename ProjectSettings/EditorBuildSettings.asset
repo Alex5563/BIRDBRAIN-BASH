@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Roderic/RodericM2.unity
     guid: 7e668f44728ccb540b18371b40460043
   - enabled: 1
+    path: Assets/Scenes/Alexa/MainMenu.unity
+    guid: 86dccc7369db946499a800a607df72f6
+  - enabled: 1
     path: Assets/Scenes/Alexa/AlexaCharSelect.unity
     guid: 5b1cfbb0191e1044791bd416130dac2e
   m_configObjects:
