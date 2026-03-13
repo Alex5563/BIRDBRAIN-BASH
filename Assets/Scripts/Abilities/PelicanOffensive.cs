@@ -39,6 +39,9 @@ public class PelicanOffensive : BirdAbility
 
         // Instantiate at the pelican's position and rotation
         GameObject fish = Instantiate(fishPrefab, transform.position + transform.forward, transform.rotation);
+
+        // Let the fish know which game object is the pelican to prevent collisions with it
+        fish.GetComponent<SlipFish>().pelican = gameObject;
         
         // Account for rotation offset
         Vector3 forward = Quaternion.Euler(-GetComponent<CharacterMovement>().rotationOffsetEuler) * transform.forward;

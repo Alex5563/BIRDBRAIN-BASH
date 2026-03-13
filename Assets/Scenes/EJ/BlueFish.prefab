@@ -122,6 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7337eddc9e64334498a911868fe6d374, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pelican: {fileID: 0}
   slipDuration: 3
 --- !u!65 &-5128020814043383929
 BoxCollider:

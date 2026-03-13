@@ -26,7 +26,7 @@ public class PenguinScript : BirdAbility
     private PlayerInput playerInput; // Input for this specific player
 
     [Header("Snowball Ability")]
-    private float snowBallCooldown = 5.0f; // Christofort: temporary cooldown
+    private float snowBallCooldown = 12.0f; // Christofort: temporary cooldown
     private float iceLength = 5.0f; // christofort: how long the ice effect lasts
     private float iceTimer = 0.0f; // christofort: tracker for the ice effect
     private float snowBallTimer = 0.0f; // Christofort: tracker for the cooldown
@@ -62,8 +62,8 @@ public class PenguinScript : BirdAbility
             gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
         // Subscribe to ball collision event if ballManager is available
-        if (ballManager != null)
-            ballManager.onBallCollision += spawnIceOnEnemy;
+        // if (ballManager != null)
+        //     ballManager.onBallCollision += spawnIceOnEnemy;
 
         if (dodgeBall != null)
         {
@@ -109,6 +109,9 @@ public class PenguinScript : BirdAbility
             }
         }
 
+        // Christofort: updates current state with the current gameState
+        currentState = gameManager != null ? gameManager.gameState : GameManager.GameState.PointStart;
+
         // Christofort: Handling SnowBall Input System (per-player input, consistent with dash)
         InputAction snowBall = playerInput.actions.FindAction("Offensive Ability");
         bool useSnowBall = (snowBall != null && snowBall.WasPressedThisFrame()) ||
@@ -138,8 +141,6 @@ public class PenguinScript : BirdAbility
             }
         }
 
-        // Christofort: updates current state with the current gameState
-        currentState = gameManager != null ? gameManager.gameState : GameManager.GameState.PointStart;
         if (dodgeBall != null) spawnPoint = dodgeBall.position;
     }
 
@@ -182,11 +183,12 @@ public class PenguinScript : BirdAbility
 
     void startSnowBall()
     {
-        stateCheck = currentState;
         iceMode = true;
         usingSnowBall = true;
         iceTimer = iceLength;
         ballInteraction.SpikeBall();
+        currentState = GameManager.GameState.Spiked;
+        stateCheck = currentState;
         Debug.Log("Snow Ball Used", this);
 
         // will spawn ice after the conditions in the coroutine are confirmed true
@@ -202,7 +204,7 @@ public class PenguinScript : BirdAbility
 
     IEnumerator spawnIce()
     {
-        yield return new WaitUntil(() => currentState != stateCheck || (spawnPoint.x < 0 && spawnPoint.y < 3));
+        yield return new WaitUntil(() => currentState != stateCheck);
 
         if (!iceSpawned)
         {
@@ -215,18 +217,18 @@ public class PenguinScript : BirdAbility
         }
     }
 
-    void spawnIceOnEnemy(Collision colInfo)
-    {
-        // spawns ice if it hits floor or enemy
-        Debug.Log("Enemy collision Ice Spawn", this);
-        if (usingSnowBall && colInfo.gameObject.CompareTag("Enemy") && !iceSpawned)
-        {
-            // Christofort: Instantiate the temporary ice object at the collision point
-            ContactPoint contact = colInfo.contacts[0];
-            Vector3 spawnPosition = contact.point;
-            iceInstance = Instantiate(tempIce, spawnPosition, Quaternion.identity);
-        }
-    }
+    // void spawnIceOnEnemy(Collision colInfo)
+    // {
+    //     // spawns ice if it hits floor or enemy
+    //     Debug.Log("Enemy collision Ice Spawn", this);
+    //     if (usingSnowBall && colInfo.gameObject.CompareTag("Enemy") && !iceSpawned)
+    //     {
+    //         // Christofort: Instantiate the temporary ice object at the collision point
+    //         ContactPoint contact = colInfo.contacts[0];
+    //         Vector3 spawnPosition = contact.point;
+    //         iceInstance = Instantiate(tempIce, spawnPosition, Quaternion.identity);
+    //     }
+    // }
 
     void endSnowBall()
     {
@@ -256,20 +258,20 @@ public class PenguinScript : BirdAbility
     {
         Debug.Log("Signal Received", this);
         // Christofort: Check if ballManager exists first to avoid errors
-        if (ballManager != null)
-            ballManager.onBallCollision += spawnIceOnEnemy;
+        // if (ballManager != null)
+        //     ballManager.onBallCollision += spawnIceOnEnemy;
     }
 
     private void OnDisable()
     {
         Debug.Log("Signal Revoked", this);
-        if (ballManager != null)
-            ballManager.onBallCollision -= spawnIceOnEnemy;
+        // if (ballManager != null)
+        //     ballManager.onBallCollision -= spawnIceOnEnemy;
     }
 
     private void OnDestroy()
     {
-        if (ballManager != null)
-            ballManager.onBallCollision -= spawnIceOnEnemy;
+        // if (ballManager != null)
+        //     ballManager.onBallCollision -= spawnIceOnEnemy;
     }
 }

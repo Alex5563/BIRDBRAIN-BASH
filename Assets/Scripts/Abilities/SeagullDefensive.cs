@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class NewMonoBehaviourScript : BirdAbility
+public class SeagullDefensive : BirdAbility
 {
     [Header("Mine Mine Mine Ability")]
     public GameManager gameManager;
@@ -21,7 +21,7 @@ public class NewMonoBehaviourScript : BirdAbility
         rb = GetComponent<Rigidbody>();
         if (gameManager == null)
         {
-            Debug.Log("GameManager not set!");
+            gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         }
     }
 

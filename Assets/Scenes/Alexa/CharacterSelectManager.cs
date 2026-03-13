@@ -61,7 +61,7 @@ public class CharacterSelectManager : MonoBehaviour
     private List<PlayerInputState> playerInputStates = new();
 
     // name of the scene to load once selections are done (MAKE SURE THIS MATCHES MULTIPLAYER MANAGER AND CHANGES WHEN NEEDED)
-    private const string mainSceneName = "RodericM2";
+    private const string mainSceneName = "Game";
 
     // Name of the main menu scene (update as needed)
     private const string mainMenuSceneName = "MainMenu";
@@ -175,13 +175,23 @@ public class CharacterSelectManager : MonoBehaviour
         }
         else
         {
-            // Default: first player KBM, others gamepads if present
-            playerInputStates.Add(new PlayerInputState(0, true, Keyboard.current));
+            // // Default: first player KBM, others gamepads if present
+            // playerInputStates.Add(new PlayerInputState(0, true, Keyboard.current));
 
-            int gamepadIndex = 0;
-            for (int i = 1; i < numberOfPlayers; ++i)
+            // int gamepadIndex = 0;
+            // for (int i = 1; i < numberOfPlayers; ++i)
+            // {
+            //     InputDevice dev = gamepadIndex < Gamepad.all.Count ? (InputDevice)Gamepad.all[gamepadIndex++] : null;
+            //     playerInputStates.Add(new PlayerInputState(i, false, dev));
+            // }
+
+            // isKBMInput.Clear();
+            // foreach (var state in playerInputStates) isKBMInput.Add(state.isKBM);
+
+            // All players are gamepades
+            for (int i = 0; i < numberOfPlayers; ++i)
             {
-                InputDevice dev = gamepadIndex < Gamepad.all.Count ? (InputDevice)Gamepad.all[gamepadIndex++] : null;
+                InputDevice dev = i < Gamepad.all.Count ? (InputDevice)Gamepad.all[i] : null;
                 playerInputStates.Add(new PlayerInputState(i, false, dev));
             }
 
@@ -243,7 +253,7 @@ public class CharacterSelectManager : MonoBehaviour
                 state.inputDirection = pad.leftStick.ReadValue();
 
                 // Update cursor position
-                float moveSpeed = 300f * Time.deltaTime;
+                float moveSpeed = 500f * Time.deltaTime;
                 state.cursorPosition += state.inputDirection * moveSpeed;
 
                 // Clamp to screen bounds
@@ -500,6 +510,9 @@ public class CharacterSelectManager : MonoBehaviour
     // This is pretty much just data transfer to the multiplayer manager
     public void BeginMatch()
     {
+        // Hide the character select screen
+        mainCanvas.enabled = false;
+
         // copy lists to the global transfer object; multiplayer manager will read them
         DataTransferManager.isKBMInput = new List<bool>(isKBMInput);
         DataTransferManager.selectedBirds = new List<BirdType>();

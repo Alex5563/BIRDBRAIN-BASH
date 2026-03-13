@@ -123,7 +123,8 @@ public class CharacterMovement : MonoBehaviour
         // christofort: addded a check for canJump to prevent jumping if ability script hasn't allowed for it
         if (canJump && grounded && jump.IsPressed())
         {
-            rb.linearVelocity += new Vector3(0, jumpForce, 0);
+            float jumpAmount = 5 + 0.3f * jumpForce;
+            rb.linearVelocity += new Vector3(0, jumpAmount, 0);
             grounded = false;
         }
     }

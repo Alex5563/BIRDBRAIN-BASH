@@ -21,6 +21,8 @@ public class SeagullOffensive : BirdAbility
         playerInput = GetComponent<PlayerInput>();
         _onLeft = GetComponent<BallInteract>().onLeft;
         EventManager.SubscribeScore(OnScore);
+        GetComponent<CharacterMovement>().controlMovement(true, true);
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     void Update()

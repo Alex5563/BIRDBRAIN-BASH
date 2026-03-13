@@ -6,17 +6,42 @@ using UnityEngine;
 // The fish will cause the opponent to slip if they come into contact with it, and will disappear after 15 seconds
 public class SlipFish : MonoBehaviour
 {
+    public GameObject pelican;
     [SerializeField]
     private float slipDuration = 3f;
     private readonly HashSet<GameObject> affectedPlayers = new(); // Keeps track of players already affected
+    private GameManager gameManager;
 
-    private void OnTriggerEnter(Collider other)
+    void Start()
+    {
+        // Variable initialization
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+    }
+
+    void OnCollisionEnter(Collision collision)
     {
         // Check if the collided object is the opponent (you can use tags or layers to identify the opponent)
-        if (other.CompareTag("Player") && other.gameObject != this.gameObject) // Ensure it's not the pelican itself
+        if (collision.gameObject.CompareTag("Player") && ValidSlipper(collision.gameObject)) // Ensure it's not the pelican itself
         {
+            
             // If we decide to make a slip animation, play it here (TO BE IMPLEMENTED)
-            StartCoroutine(SlipEffect(other.gameObject));
+            StartCoroutine(SlipEffect(collision.gameObject));
+        }
+    }
+
+    private bool ValidSlipper(GameObject other)
+    {
+        // If other is the pelican, return false
+        if (other == pelican) return false;
+
+        // Determine if the other is an enemy of the pelican
+        if (pelican == gameManager.leftPlayer1 || pelican == gameManager.leftPlayer1)
+        {
+            return other == gameManager.rightPlayer1 || other == gameManager.rightPlayer2;
+        }
+        else
+        {
+            return other == gameManager.leftPlayer1 || other == gameManager.leftPlayer2;
         }
     }
 

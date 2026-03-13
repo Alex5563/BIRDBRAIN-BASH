@@ -204,6 +204,10 @@ public class BallInteract : MonoBehaviour
                         }
                         serverMovement.targetRotation = baseRotation;
                     }
+                    else
+                    {
+                        serverMovement.controlMovement(true, true);
+                    }
                     // If this player is the one serving and they press the serve button, serve the ball
                     if (gameManager.server == gameObject && playerInput.actions.FindAction("Serve").WasPressedThisFrame())
                     {

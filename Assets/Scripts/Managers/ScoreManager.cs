@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.Events;
 using TMPro;
+using System;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -20,9 +21,6 @@ public class ScoreManager : MonoBehaviour
     [Header("Serve Indicator")]
     public GameObject side1ServeIndicator;
     public GameObject side2ServeIndicator;
-
-    [Header("Bird Types")]
-    [SerializeField] private BirdType rightBirdType1;
    
     private bool leftLastScored;
     private bool inPlay;
@@ -68,8 +66,8 @@ public class ScoreManager : MonoBehaviour
             inPlay = false;
             Debug.Log("side 2 scored! points: " + side2Score);
             LeftScored.Invoke();
-            PlaySounds(true);
-            CheckWinSet(true);
+            PlaySounds(false);
+            CheckWinSet(false);
         } 
         // if it touches side 2, then side 1 scores
         else if (collision.gameObject.CompareTag("Side2") && inPlay) 
@@ -79,8 +77,8 @@ public class ScoreManager : MonoBehaviour
             inPlay = false;
             Debug.Log("side 1 scored! points: " + side1Score);
             RightScored.Invoke();
-            PlaySounds(false);
-            CheckWinSet(false);
+            PlaySounds(true);
+            CheckWinSet(true);
         }
 
         // ducky: If ball goes out, run coroutine in case out collision was registered before court collision
@@ -238,14 +236,31 @@ public class ScoreManager : MonoBehaviour
     void PlaySounds(bool leftJustScored)
     {
         AudioManager.PlayScoringSound(1.0f);
-        // Play the correct sounds depending on which team just scored
-        if (leftJustScored)
-        {
-            AudioManager.PlayBirdSound(rightBirdType1, SoundType.SAD, 1.0f);
-        }
-        else
-        {
-            AudioManager.PlayBirdSound(rightBirdType1, SoundType.HAPPY, 1.0f);
-        }
+
+        // TODO: FIX THIS WHEN IT'S NOT 4 AM AND I'M NOT MENTALLY EXHAUSTED (Roderic)
+        // // Get the four players' bird types from the game manager
+        // BirdType lbt1 = gameManager.leftPlayer1.GetComponent<BallInteract>()
+        
+        // // Play the correct sounds depending on which team just scored
+        // if (leftJustScored)
+        // {
+        //     AudioManager.PlayBirdSound(rightBirdType1, SoundType.SAD, 1.0f);
+        // }
+        // else
+        // {
+        //     AudioManager.PlayBirdSound(rightBirdType1, SoundType.HAPPY, 1.0f);
+        // }
     }
+
+    // BirdType GetBirdType(GameObject bird)
+    // {
+    //     try
+    //     {
+    //         return bird.GetComponent<BallInteract>().GetBirdType();
+    //     }
+    //     catch (NullReferenceException)
+    //     {
+    //         return bird.GetComponent<AIBehavior>().bir
+    //     }
+    // }
 }

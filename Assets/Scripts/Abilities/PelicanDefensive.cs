@@ -11,15 +11,16 @@ public class PelicanDefensive : BirdAbility
     public GameManager gameManager;
     private bool onCooldown = false;
     private bool isBallEaten = false;
+    private PlayerInput playerInput;
 
     void Update()
     {
         // If pressesd defensive ability button, activate ability
-        if (!onCooldown && InputSystem.actions.FindAction("Defensive Ability").WasPressedThisFrame() && canUseAbilities())
+        if (!onCooldown && playerInput.actions.FindAction("Defensive Ability").WasPressedThisFrame() && canUseAbilities())
         {
             EatTheBall();
         }
-        if (isBallEaten && InputSystem.actions.FindAction("Serve").WasPressedThisFrame())
+        if (isBallEaten && playerInput.actions.FindAction("Serve").WasPressedThisFrame())
          {
              Debug.Log("Pelican released the ball manually.");
              if (ball != null)
@@ -39,6 +40,7 @@ public class PelicanDefensive : BirdAbility
     {
         ballInteract = GetComponent<BallInteract>();
         ball = GameObject.FindGameObjectWithTag("Ball");
+        playerInput = GetComponent<PlayerInput>();
     }
 
     public void EatTheBall()

@@ -114,6 +114,7 @@ public class AudioManager : MonoBehaviour
                 break;
         }
 
+        Debug.Log(instance.audioSource);
         // Play the desired sound
         instance.audioSource.PlayOneShot(birdSounds[(int)soundType], volume);
     }
@@ -123,7 +124,7 @@ public class AudioManager : MonoBehaviour
     {
 
         instance.backgroundAudioSource.clip = audioClip;
-        instance.backgroundAudioSource.volume = volume;
+        instance.backgroundAudioSource.volume = volume * 0.2f;
         instance.backgroundAudioSource.Play();
     }
 

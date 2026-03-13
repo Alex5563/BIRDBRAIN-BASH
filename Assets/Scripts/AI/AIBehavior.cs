@@ -199,7 +199,8 @@ public class AIBehavior : MonoBehaviour
                         }
                         else if (grounded) // Else if the AI is under the ball and grounded, jump
                         {
-                            GetComponent<Rigidbody>().linearVelocity += new Vector3(0, jumpForce, 0);
+                            float jumpAmount = 5 + 0.3f * jumpForce;
+                            GetComponent<Rigidbody>().linearVelocity += new Vector3(0, jumpAmount, 0);
                             grounded = false;
                         }
                         else if (IsAINearBall()) // Else if the AI is under the ball, not grounded, and is close to the ball, spike it
