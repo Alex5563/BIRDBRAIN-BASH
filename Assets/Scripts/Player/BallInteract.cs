@@ -100,7 +100,7 @@ public class BallInteract : MonoBehaviour
     }
 
     // If the player is near the ball
-    private bool IsPlayerNearBall()
+    public bool IsPlayerNearBall()
     {
         if (ball == null) return false;
         if (contactPoint == null)
@@ -314,7 +314,7 @@ public class BallInteract : MonoBehaviour
     }
 
     // Spike the ball
-    private void SpikeBall()
+    public void SpikeBall()
     {
         // Set the spiking location to middle-back of court on the rightside as default
         spikeToLocation = new Vector3(8, 0, 0);
