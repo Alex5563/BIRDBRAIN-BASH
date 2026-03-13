@@ -7,6 +7,8 @@ public class BallManager : MonoBehaviour
     public GameObject unblockableOwner; // If set, this player's spike cannot be blocked
     public bool offCourse; // Boolean for whether the ball is off course of where it is supposed to go
     private Rigidbody rb; // Rigidbody of the ball
+    public System.Action<Collision> onBallCollision; // Christofort: Event for when the ball collides with something
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -26,6 +28,7 @@ public class BallManager : MonoBehaviour
     // Calls whenever the character collides with another collider or rigidbody
     void OnCollisionEnter(Collision other)
     {
+        onBallCollision?.Invoke(other);
         // Activate gravity it's not already activated and the game state is NOT serving
         if (!rb.useGravity && !gameManager.gameState.Equals(GameManager.GameState.PointStart))
         {
