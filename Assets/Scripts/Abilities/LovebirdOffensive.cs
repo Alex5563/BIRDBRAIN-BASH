@@ -17,15 +17,23 @@ public class LoveBirdOffensive : MonoBehaviour
     private List<GameObject> opponents = new();
     private List<ParticleSystem> _hearts = new();
     private GameManager gameManager;
+    private PlayerInput playerInput;
 
     void Start()
     {
         gameManager = FindFirstObjectByType<GameManager>();
         _onLeft = GetComponent<BallInteract>().onLeft;
+        playerInput = GetComponent<PlayerInput>();
     }
 
     void Update()
     {
+        // If offensive ability pressed, debuff enemy
+        if (playerInput.actions.FindAction("Offensive Ability").WasPressedThisFrame())
+        {
+            DebuffEnemy();
+        }
+
         // If the debuff is active, moves the opponents towards the net
         if (_debuffActive)
         {
@@ -44,6 +52,7 @@ public class LoveBirdOffensive : MonoBehaviour
     public void DebuffEnemy()
     {
         if (!_onCooldown)
+        {
             _onCooldown = true;
             StartCoroutine(Cooldown());
 
@@ -81,8 +90,8 @@ public class LoveBirdOffensive : MonoBehaviour
             _debuffActive = true;
 
             StartCoroutine(DebuffTimer());
-            
         }
+    }
 
     private IEnumerator DebuffTimer()
     {

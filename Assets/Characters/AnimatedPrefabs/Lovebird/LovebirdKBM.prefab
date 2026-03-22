@@ -2895,9 +2895,10 @@ GameObject:
   - component: {fileID: 5952528260641251201}
   - component: {fileID: 5661730444322572434}
   - component: {fileID: 346766123451097148}
+  - component: {fileID: -5526560345427708388}
   m_Layer: 0
   m_Name: LovebirdKBM
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7935,7 +7936,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
   cooldown: 6
-  dashSpeed: 18
+  dashSpeed: 60
   dashToDistance: 2
 --- !u!54 &346766123451097148
 Rigidbody:
@@ -7964,6 +7965,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &-5526560345427708388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8864791499710885871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 593700650f8d8a043851550585a9d6f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DebuffLength: 2
+  cooldown: 20
+  walkSpeed: 1
+  hearts: {fileID: 2103532663826045379, guid: aa26f21b86994d044a963dfff8ce2292, type: 3}
+  heartsOffset: 1.15
 --- !u!1 &8970968684581314605
 GameObject:
   m_ObjectHideFlags: 0

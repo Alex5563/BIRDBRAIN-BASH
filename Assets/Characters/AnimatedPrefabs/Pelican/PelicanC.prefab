@@ -363,6 +363,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PelicanC
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b46d13d2bff2efb45aa33256c23387eb, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 1567107424331199580, guid: b46d13d2bff2efb45aa33256c23387eb, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -5650,7 +5654,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldown: 30
-  slipFishSpeed: 15
+  slipFishSpeed: 10
   fishLifetime: 15
   fishPrefab: {fileID: 38830316321675584, guid: 69b1d0c462e97e94ba0fcd5eb8a57646, type: 3}
 --- !u!54 &740522824958771836

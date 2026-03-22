@@ -31,7 +31,7 @@ public class SeagullOffensive : BirdAbility
             Debug.Log("Ability has been disabled by the crow :(");
             return;
         }
-        if (_debuffWindow && playerInput.actions.FindAction("Offensive Ability").WasPressedThisFrame())
+        if (_debuffWindow && playerInput.actions.FindAction("Offensive Ability").WasPressedThisFrame() && CanMock())
         {
             DebuffEnemy();
         }
@@ -92,5 +92,20 @@ public class SeagullOffensive : BirdAbility
         _debuffWindow = true;
         yield return new WaitForSeconds(debuffWindowLength);
         _debuffWindow = false;
+    }
+
+    private bool CanMock()
+    {
+        // If the point hasn't just ended or point not about to start return false
+        if (!gameManager.gameState.Equals(GameManager.GameState.PointStart) && !gameManager.gameState.Equals(GameManager.GameState.PointEnd))
+        {
+            return false;
+        }
+
+        // Get which side just scored the point
+        bool leftJustScored = gameManager.scoreManager.side1ServeIndicator.activeInHierarchy;
+
+        // Return true if they equal
+        return _onLeft == leftJustScored;
     }
 }

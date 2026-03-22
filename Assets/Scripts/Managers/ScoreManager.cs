@@ -65,7 +65,7 @@ public class ScoreManager : MonoBehaviour
             side2ScoreUI.text = side2Score.ToString();
             inPlay = false;
             Debug.Log("side 2 scored! points: " + side2Score);
-            LeftScored.Invoke();
+            RightScored.Invoke();
             PlaySounds(false);
             CheckWinSet(false);
         } 
@@ -76,7 +76,7 @@ public class ScoreManager : MonoBehaviour
             side1ScoreUI.text = side1Score.ToString();
             inPlay = false;
             Debug.Log("side 1 scored! points: " + side1Score);
-            RightScored.Invoke();
+            LeftScored.Invoke();
             PlaySounds(true);
             CheckWinSet(true);
         }

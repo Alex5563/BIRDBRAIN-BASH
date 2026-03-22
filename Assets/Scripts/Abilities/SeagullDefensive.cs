@@ -49,7 +49,7 @@ public class SeagullDefensive : BirdAbility
             return;
         }
 
-        if (playerInput.actions.FindAction("Defensive Ability").WasPressedThisFrame() && CanDashToBall())
+        if (CanDashToBall())
         {
             StartCoroutine(DashToBall());
         }
@@ -173,7 +173,7 @@ public class SeagullDefensive : BirdAbility
     //Update is called once per frame
     void Update()
     {
-        if (Keyboard.current.tKey.wasPressedThisFrame) //for testing can change later
+        if (playerInput.actions.FindAction("Defensive Ability").WasPressedThisFrame()) //for testing can change later
         {
             ActivateAbility();
         }
