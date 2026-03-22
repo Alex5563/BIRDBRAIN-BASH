@@ -2498,6 +2498,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerSelectMenu: {fileID: 1973436687}
   inputSelectMenu: {fileID: 1628652661}
+  characterSelectSceneName: CharSelect
 --- !u!1 &2052212325
 GameObject:
   m_ObjectHideFlags: 0

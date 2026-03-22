@@ -1458,7 +1458,7 @@ GameObject:
   - component: {fileID: 580795107138055432}
   m_Layer: 0
   m_Name: ScissortailKBM
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

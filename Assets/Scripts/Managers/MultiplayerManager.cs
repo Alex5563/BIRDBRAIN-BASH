@@ -10,9 +10,6 @@ public class MultiplayerManager : MonoBehaviour
     [Header("Player Transforms")]
     public Transform[] playerSpawnpoints; // Spawnpoints that the players and AI will use
 
-    [Header("Player Prefabs")]
-    [SerializeField] private GameObject keyboardPrefab; // Prefab for a keyboard player
-    [SerializeField] private GameObject gamepadPrefab; // Prefab for a controller player
     [SerializeField] private GameObject aiPrefab; // Prefab for an AI player
 
     [SerializeField] private GameManager gameManager; // Instance of the game manager
@@ -184,24 +181,9 @@ public class MultiplayerManager : MonoBehaviour
 
     void MakePlayer(GameObject player, int playerCount)
     {
-
-        // // Add new character movement script
-        // CharacterMovement characterMovement = player.AddComponent<CharacterMovement>();
-
-        // // Set the desired fields for the character movement
-        // characterMovement.maxGroundSpeed = 4.0f;
-        // characterMovement.maxAirSpeed = characterMovement.maxGroundSpeed / 2;
-        // characterMovement.jumpForce = 6.0f;
-
         // Set side of court for player
         BallInteract ballInteract = player.GetComponent<BallInteract>();
         ballInteract.onLeft = playerCount < 2 ? true : false;
-
-        // if the selection manager added a bird type, apply it here as well
-        // if (DataTransferManager.selectedBirds != null && DataTransferManager.selectedBirds.Count > playerCount)
-        // {
-        //     ballInteract.SetBirdType(DataTransferManager.selectedBirds[playerCount]);
-        // }
         
         // Assign the transform of the player
         player.transform.position = playerSpawnpoints[playerCount].position;
@@ -237,14 +219,20 @@ public class MultiplayerManager : MonoBehaviour
 
     void MakeAI(int playerCount)
     {
-        // Initialize the prefab keyboard and mouse prefab
-        GameObject ai = Instantiate(aiPrefab);
+        // Random bird for the AI
+        BirdType birdType = (BirdType) (int) (UnityEngine.Random.value * 11);
 
-        // Give it the ai component and assign the fields
-        AIBehavior aIBehavior = ai.AddComponent<AIBehavior>();
-        aIBehavior.maxGroundSpeed = 4.0f;
-        aIBehavior.maxAirSpeed = aIBehavior.maxGroundSpeed / 2;
-        aIBehavior.jumpForce = 6.0f;
+        // Get the model for the ai
+        GameObject aiModel = GetBirdModel(birdType, false, false);
+
+        // Initialize the prefab keyboard and mouse prefab
+        GameObject ai = Instantiate(aiModel);
+
+        // If it is not enabled, enable it
+        if (!ai.activeInHierarchy) ai.SetActive(true);
+
+        // Get the ai component and assign the fields
+        AIBehavior aIBehavior = ai.GetComponent<AIBehavior>();
         aIBehavior.onLeft = playerCount < 2 ? true : false;
 
         // Set ai transform
@@ -269,7 +257,7 @@ public class MultiplayerManager : MonoBehaviour
             gameManager.rightPlayer2 = ai;
             fo = GameObject.Find("PlayerFourFollow").GetComponent<FollowObject>();
         }
-        else
+        else // This should never happen as there should always be one human player, but better to be safe than sorry
         {
             fo = GameObject.Find("PlayerOneFollow").GetComponent<FollowObject>();
         }

@@ -363,6 +363,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PelicanAI
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b46d13d2bff2efb45aa33256c23387eb, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 1567107424331199580, guid: b46d13d2bff2efb45aa33256c23387eb, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -647,6 +651,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b46d13d2bff2efb45aa33256c23387eb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1192251009908472663}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b46d13d2bff2efb45aa33256c23387eb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -3779008797536581838}
   m_SourcePrefab: {fileID: 100100000, guid: b46d13d2bff2efb45aa33256c23387eb, type: 3}
 --- !u!1 &5796189094087152554 stripped
 GameObject:
@@ -5603,7 +5610,7 @@ MonoBehaviour:
   gameManager: {fileID: 0}
   onLeft: 0
   ballManager: {fileID: 0}
-  interactionRadius: 5
+  interactionRadius: 3
   animator: {fileID: 3971563219526740688}
   maxGroundSpeed: 1
   maxAirSpeed: 1
@@ -5611,6 +5618,18 @@ MonoBehaviour:
   rotationSpeed: 10
   overrideRotation: 0
   targetRotation: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &-3779008797536581838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5796189094087152554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ee3f476d1e008b409f5d54418a1962f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &6574098671460059408 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b46d13d2bff2efb45aa33256c23387eb, type: 3}
