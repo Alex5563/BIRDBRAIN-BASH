@@ -13,7 +13,6 @@ public class PenguinScript : BirdAbility
     GameObject iceInstance;
 
     public float penguinHeight; // christofort: height of the penguin for ground check
-    public GameManager gameManager; // Game manager for volleyball
 
     [HideInInspector] public bool isDashing = false;
     private bool isReturningUpright = false; // Ensure penguin returns to upright after dash
@@ -63,10 +62,6 @@ public class PenguinScript : BirdAbility
         // christofort: automatically sets canJump and canMove to True
         if (characterMovement != null) characterMovement.controlMovement(true, true);
 
-        // If not assigned in scene, try to find the game manager
-        if (gameManager == null)
-            gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-
         // Subscribe to ball collision event if ballManager is available
         if (ballManager != null)
             ballManager.onBallCollision += checkNetCollision;
@@ -100,6 +95,7 @@ public class PenguinScript : BirdAbility
         bool dashPressed = (dash != null && dash.WasPressedThisFrame()) ||
                            (dash == null && Keyboard.current?.spaceKey.wasPressedThisFrame == true);
 
+        GameManager gameManager = GameManager.Instance;
         bool validGamestate = !gameManager.gameState.Equals(GameManager.GameState.PointStart);
 
         penguinHeight = transform.position.y; // christofort: grabs the Y value of the penguin
@@ -226,10 +222,9 @@ public class PenguinScript : BirdAbility
         iceTimer = iceLength;
 
         // Christofort: remember the state before the spike happens
-        stateCheck = gameManager != null ? gameManager.gameState : GameManager.GameState.PointStart;
+        stateCheck = GameManager.Instance.gameState;
 
         ballInteraction.SpikeBall();
-        Debug.Log("Snow Ball Used", this);
 
         // New: stop any old coroutine before starting a new one
         if (spawnIceCoroutine != null)
@@ -324,6 +319,7 @@ public class PenguinScript : BirdAbility
     {
         // New: wait until the snowball gets touched by someone and the state becomes
         // either Bumped or Blocked. These are the states that mean the other side made contact.
+        GameManager gameManager = GameManager.Instance;
         yield return new WaitUntil(() =>
             usingSnowBall &&
             gameManager != null &&
@@ -365,13 +361,14 @@ public class PenguinScript : BirdAbility
 
     bool IsOpponentPlayer(GameObject player)
     {
-        if (gameManager == null || player == null)
+        if (player == null)
         {
-            Debug.Log("IsOpponentPlayer: gameManager or player is null", this);
+            Debug.Log("IsOpponentPlayer: Player is null", this);
             return false;
         }
 
         // Always return true if game state is Blocked or Bumped
+        GameManager gameManager = GameManager.Instance;
         if (gameManager.gameState == GameManager.GameState.Blocked || gameManager.gameState == GameManager.GameState.Bumped)
         {
             Debug.Log($"IsOpponentPlayer: gameState is {gameManager.gameState}, returning true", this);

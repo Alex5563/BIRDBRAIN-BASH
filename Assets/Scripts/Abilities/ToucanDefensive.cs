@@ -10,7 +10,6 @@ public class ToucanDefensive : BirdAbility
     public int buffAmount; // Amount the ability increases ally's stats
     [SerializeField]
     public int buffLength; // Amount of time in seconds the buff lasts
-    public GameManager gameManager;
     private bool _onLeft;
 
     private bool onCooldown = false;
@@ -41,6 +40,7 @@ public class ToucanDefensive : BirdAbility
             GameObject teammate = null;
 
             // Finds the teammate to buff
+            GameManager gameManager = GameManager.Instance;
             if (_onLeft)
             {
                 GameObject leftPlayer1 = gameManager.leftPlayer1;

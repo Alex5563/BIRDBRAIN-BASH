@@ -16,12 +16,10 @@ public class LoveBirdOffensive : MonoBehaviour
     private bool _onLeft;
     private List<GameObject> opponents = new();
     private List<ParticleSystem> _hearts = new();
-    private GameManager gameManager;
     private PlayerInput playerInput;
 
     void Start()
     {
-        gameManager = FindFirstObjectByType<GameManager>();
         _onLeft = GetComponent<BallInteract>().onLeft;
         playerInput = GetComponent<PlayerInput>();
     }
@@ -67,6 +65,7 @@ public class LoveBirdOffensive : MonoBehaviour
             }
 
             // Gets opponents
+            GameManager gameManager = GameManager.Instance;
             if (_onLeft)
             {
                 opponents.Add(gameManager.rightPlayer1);

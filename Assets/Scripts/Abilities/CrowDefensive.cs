@@ -19,7 +19,6 @@ public class CrowDefensiveAbility : BirdAbility
     private Vector3 randomSpawnPosition2;
     private Vector3 randomSpawnPosition3;
     private PlayerInput playerInput; // Input for this specific player
-    public GameManager gameManager;
 
     void Start()
     {
@@ -30,6 +29,7 @@ public class CrowDefensiveAbility : BirdAbility
     {
         //Check if conditions are met to activate ability
         InputAction statBuff = playerInput.actions.FindAction("Defensive Ability");
+        GameManager gameManager = GameManager.Instance;
         if (!onCooldown && !gameManager.gameState.Equals(GameManager.GameState.PointStart) && canUseAbilities()
             && !gameManager.gameState.Equals(GameManager.GameState.PointEnd) && statBuff.WasPressedThisFrame())
         {
@@ -77,8 +77,8 @@ public class CrowDefensiveAbility : BirdAbility
         // Clear coins from the court if they exist from a previous ability use
         ClearCurrCoins();
 
-        Debug.Log("Ability activated");
         // Check which side the player is on and spawn coins on that side of the court
+        GameManager gameManager = GameManager.Instance;
         if (gameObject == gameManager.leftPlayer1 || gameObject == gameManager.leftPlayer2) 
         {
             randomSpawnPosition1 = new Vector3(Random.Range(-.5f, 8), .5f, Random.Range(-4, 4));

@@ -193,6 +193,10 @@ public class CharacterMovement : MonoBehaviour
 
         maxGroundSpeed += increase;
         maxAirSpeed += increase;
+        
+        // Clamp it so that the stat cannot go below 1
+        maxGroundSpeed = Mathf.Max(maxGroundSpeed, 1f);
+        maxAirSpeed = Mathf.Max(maxAirSpeed, 1f);
         // jumpForce += increase;
 
         Debug.Log("NEW = "+ maxGroundSpeed);

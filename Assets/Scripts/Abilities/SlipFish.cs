@@ -10,13 +10,6 @@ public class SlipFish : MonoBehaviour
     [SerializeField]
     private float slipDuration = 3f;
     private readonly HashSet<GameObject> affectedPlayers = new(); // Keeps track of players already affected
-    private GameManager gameManager;
-
-    void Start()
-    {
-        // Variable initialization
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-    }
 
     void OnCollisionEnter(Collision collision)
     {
@@ -35,6 +28,7 @@ public class SlipFish : MonoBehaviour
         if (other == pelican) return false;
 
         // Determine if the other is an enemy of the pelican
+        GameManager gameManager = GameManager.Instance;
         if (pelican == gameManager.leftPlayer1 || pelican == gameManager.leftPlayer1)
         {
             return other == gameManager.rightPlayer1 || other == gameManager.rightPlayer2;

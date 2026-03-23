@@ -10,18 +10,12 @@ public class CrowOffensive : BirdAbility {
     [SerializeField]
     public float timeEnemiesAreImpacted = 3f;
 
-    [SerializeField] private GameManager gameManager;
     private bool onCooldown = false;
     private PlayerInput input; // Input for the player
 
     void Start()
     {
         input = GetComponent<PlayerInput>();
-
-        if (gameManager == null)
-        {
-            gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        }
     }
 
     void Update()
@@ -43,6 +37,7 @@ public class CrowOffensive : BirdAbility {
     IEnumerator DisableEnemies() {
         // Determine which birds are on other team
         List<BirdAbility> enemyAbilities = new List<BirdAbility>();
+        GameManager gameManager = GameManager.Instance;
         if (gameManager.leftPlayer1 == this || gameManager.leftPlayer2 == this)
         {
             enemyAbilities.AddRange(gameManager.rightPlayer1.GetComponents<BirdAbility>());

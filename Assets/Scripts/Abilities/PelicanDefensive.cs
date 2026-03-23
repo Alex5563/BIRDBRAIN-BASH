@@ -8,7 +8,6 @@ public class PelicanDefensive : BirdAbility
     public int holdLength; // Amount the ability increases ally's stats
     public BallInteract ballInteract;
     public GameObject ball;
-    public GameManager gameManager;
     private bool onCooldown = false;
     private bool isBallEaten = false;
     private PlayerInput playerInput;
@@ -49,6 +48,7 @@ public class PelicanDefensive : BirdAbility
         // Only runs if not on cooldown
         if (!onCooldown)
         {
+            GameManager gameManager = GameManager.Instance;
             bool validState = gameManager.gameState == GameManager.GameState.PointStart
                 || gameManager.gameState == GameManager.GameState.Served
                 || gameManager.gameState == GameManager.GameState.Set;

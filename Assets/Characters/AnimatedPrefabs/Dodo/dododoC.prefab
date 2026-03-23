@@ -820,7 +820,7 @@ MonoBehaviour:
   ballManager: {fileID: 0}
   interactionRadius: 5
   animator: {fileID: 2179466929208135898}
-  spikeStat: 0
+  spikeStat: 2
   birdType: 4
 --- !u!95 &2179466929208135898
 Animator:
@@ -886,9 +886,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3bd2834d7138ea44b9eeb436d77161d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxGroundSpeed: 1
+  maxGroundSpeed: 2
   maxAirSpeed: 1
-  jumpForce: 1
+  jumpForce: 2
   rotationSpeed: 10
   rotationOffsetEuler: {x: 0, y: 0, z: 0}
   animator: {fileID: 2179466929208135898}

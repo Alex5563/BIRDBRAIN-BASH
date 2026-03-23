@@ -11,7 +11,6 @@ public class SeagullOffensive : BirdAbility
     public int debuffAmount; // Amount the debuff will DECREASE stats
     public int debuffWindowLength; // Amount of time in seconds after a score the player can trigger the debuff
 
-    public GameManager gameManager;
     private bool _debuffWindow = false;
     private bool _onLeft;
     private PlayerInput playerInput; // Input for this specific player
@@ -22,7 +21,6 @@ public class SeagullOffensive : BirdAbility
         _onLeft = GetComponent<BallInteract>().onLeft;
         EventManager.SubscribeScore(OnScore);
         GetComponent<CharacterMovement>().controlMovement(true, true);
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     void Update()
@@ -43,12 +41,12 @@ public class SeagullOffensive : BirdAbility
         List<GameObject> opponents = new();
         if (_onLeft)
         {
-            opponents.Add(gameManager.rightPlayer1);
-            opponents.Add(gameManager.rightPlayer2);
+            opponents.Add(GameManager.Instance.rightPlayer1);
+            opponents.Add(GameManager.Instance.rightPlayer2);
         } else
         {
-            opponents.Add(gameManager.leftPlayer1);
-            opponents.Add(gameManager.leftPlayer2);
+            opponents.Add(GameManager.Instance.leftPlayer1);
+            opponents.Add(GameManager.Instance.leftPlayer2);
         }
 
         foreach (GameObject opponent in opponents)
@@ -114,6 +112,7 @@ public class SeagullOffensive : BirdAbility
     private bool CanMock()
     {
         // If the point hasn't just ended or point not about to start return false
+        GameManager gameManager = GameManager.Instance;
         if (!gameManager.gameState.Equals(GameManager.GameState.PointStart) && !gameManager.gameState.Equals(GameManager.GameState.PointEnd))
         {
             return false;

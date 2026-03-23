@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 public class SeagullDefensive : BirdAbility
 {
     [Header("Mine Mine Mine Ability")]
-    public GameManager gameManager;
     public float dashSpeed = 100f; //how fast the dash is
     public float cooldown = 15f; //cooldown in seconds
     public float shoveForce = 18f; //how much the seagull pushes others out of the way
@@ -19,10 +18,6 @@ public class SeagullDefensive : BirdAbility
     {
         playerInput = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody>();
-        if (gameManager == null)
-        {
-            gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        }
     }
 
     public void ActivateAbility()
@@ -32,6 +27,7 @@ public class SeagullDefensive : BirdAbility
             Debug.Log("SeagullDefensive: Ability not ready (cooldown).");
             return;
         }
+        GameManager gameManager = GameManager.Instance;
         if (gameManager.gameState == GameManager.GameState.PointStart && gameManager.server == gameObject)
         {
             Debug.Log("SeagullDefensive: Can't dash while serving at point start.");
@@ -61,7 +57,7 @@ public class SeagullDefensive : BirdAbility
 
 private bool CanDashToBall()
 {
-    GameObject ball = gameManager.ball;
+    GameObject ball = GameManager.Instance.ball;
     if (ball == null)
     {
         Debug.Log("SeagullDefensive: Ball is null!");
@@ -80,7 +76,7 @@ private bool CanDashToBall()
     }
 
     // Allow dashing during any active play state where the ball is in motion
-    GameManager.GameState state = gameManager.gameState;
+    GameManager.GameState state = GameManager.Instance.gameState;
     bool validState = state == GameManager.GameState.Spiked ||
                       state == GameManager.GameState.Blocked ||
                       state == GameManager.GameState.Bumped ||
@@ -112,7 +108,7 @@ private bool CanDashToBall()
         }
 
         //Check if ball is on the player's side
-        GameObject ball = gameManager.ball;
+        GameObject ball = GameManager.Instance.ball;
         if (ball == null)
         {
             isAbilityReady = true;

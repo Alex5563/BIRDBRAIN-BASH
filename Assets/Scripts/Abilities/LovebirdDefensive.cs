@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 public class LovebirdDefensive : BirdAbility
 {
     [Header("Romantic Rush")]
-    public GameManager gameManager;
     public float cooldown = 6.0f;
     public float dashSpeed = 18.0f;
     public float dashToDistance = 2.0f; // How close Loverbird dashes to Ally
@@ -18,11 +17,6 @@ public class LovebirdDefensive : BirdAbility
     {
         rb = GetComponent<Rigidbody>();
         playerInput = GetComponent<PlayerInput>();
-
-        if (gameManager == null)
-        {
-            Debug.Log("No Game Manager Object has been set!");
-        }
     }
 
     public void ActivateAbility()
@@ -37,6 +31,7 @@ public class LovebirdDefensive : BirdAbility
     // Finds which GameObject is the Ally to player
     private GameObject GetAlly()
     {
+        GameManager gameManager = GameManager.Instance;
         if (gameObject == gameManager.leftPlayer1)
         {
             return gameManager.leftPlayer2;
@@ -98,7 +93,7 @@ public class LovebirdDefensive : BirdAbility
     void Update()
     {
         if (playerInput.actions.FindAction("Defensive Ability").WasPressedThisFrame() && abilityReady 
-            && !gameManager.gameState.Equals(GameManager.GameState.PointStart) && canUseAbilities())
+            && !GameManager.Instance.gameState.Equals(GameManager.GameState.PointStart) && canUseAbilities())
         {
             ActivateAbility();
         }

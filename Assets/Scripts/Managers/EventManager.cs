@@ -1,10 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net.Sockets;
-using NUnit.Framework.Internal;
-using Unity.VisualScripting;
-using UnityEngine;
-
 public static class EventManager
 {
     // Listeners for the Score event

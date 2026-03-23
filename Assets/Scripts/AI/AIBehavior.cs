@@ -5,7 +5,6 @@ using System.Collections;
 public class AIBehavior : MonoBehaviour
 {
     [Header("Game Manager")]
-    public GameManager gameManager; // Script that manages the game logic
     public bool onLeft; // Whether this AI is on the left side of the net or not
 
     [Header("Ball Manager")]
@@ -62,12 +61,7 @@ public class AIBehavior : MonoBehaviour
             ballManager = ball.GetComponent<BallManager>();
 
         }
-        
-        // If not assigned in scene, try to find the game manager
-        if (gameManager == null)
-        {
-            gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        }
+    
 
         // Set the spike speed and the amount of time AI takes to serve
         spikeSpeed = 10f;
@@ -157,7 +151,7 @@ public class AIBehavior : MonoBehaviour
         if (CanHit())
         {
             // Check the game state
-            switch (gameManager.gameState)
+            switch (GameManager.Instance.gameState)
             {
                 // If the ball was just spiked or served
                 case GameManager.GameState.Spiked: case GameManager.GameState.Served: case GameManager.GameState.Blocked:
@@ -220,7 +214,7 @@ public class AIBehavior : MonoBehaviour
                 // If the point is about to start (ball needs to be served)
                 case GameManager.GameState.PointStart:
                     // If this AI is the one serving
-                    if (gameManager.server == gameObject)
+                    if (GameManager.Instance.server == gameObject)
                     {
                         // If the AI can serve ball, do so. Otherwise, wait.
                         if (timeTilServe < 0f)
@@ -236,7 +230,7 @@ public class AIBehavior : MonoBehaviour
             }
         }
         // Reposition for defense ONLY IF the ball is not about to be served AND the AI cannot hit it
-        else if (!gameManager.gameState.Equals(GameManager.GameState.PointStart))
+        else if (!GameManager.Instance.gameState.Equals(GameManager.GameState.PointStart))
         {
             MoveAI(false);
         }
@@ -245,6 +239,7 @@ public class AIBehavior : MonoBehaviour
     // Check if the AI is legally able to hit the ball
     private bool CanHit()
     {
+        GameManager gameManager = GameManager.Instance;
         // If the point has ended, they cannot hit the ball
         if (gameManager.gameState.Equals(GameManager.GameState.PointEnd)) return false;
 
@@ -303,7 +298,7 @@ public class AIBehavior : MonoBehaviour
             target *= -1;
             
             // If the AI is the first player on the left side, push them to the top of the screen
-            if (gameManager.leftPlayer1.Equals(gameObject))
+            if (GameManager.Instance.leftPlayer1.Equals(gameObject))
             {
                 target += new Vector3(0, 0, 2);
             }
@@ -315,7 +310,7 @@ public class AIBehavior : MonoBehaviour
         else
         {
             // If the AI is the first player on the right side, push them to the the top of the screen
-            if (gameManager.rightPlayer1.Equals(gameObject))
+            if (GameManager.Instance.rightPlayer1.Equals(gameObject))
             {
                 target += new Vector3(0, 0, 2);
             }
@@ -436,9 +431,9 @@ public class AIBehavior : MonoBehaviour
         AudioManager.PlayBallPlayerInteractionSound();
 
         // Update game manager fields
-        gameManager.gameState = GameManager.GameState.Bumped;
-        gameManager.lastHit = gameObject;
-        gameManager.leftAttack = onLeft;
+        GameManager.Instance.gameState = GameManager.GameState.Bumped;
+        GameManager.Instance.lastHit = gameObject;
+        GameManager.Instance.leftAttack = onLeft;
 
         // Trigger bump animation
         if (animator != null)
@@ -492,8 +487,8 @@ public class AIBehavior : MonoBehaviour
         AudioManager.PlayBallPlayerInteractionSound();
 
         // Update game manager fields
-        gameManager.gameState = GameManager.GameState.Set;
-        gameManager.lastHit = gameObject;
+        GameManager.Instance.gameState = GameManager.GameState.Set;
+        GameManager.Instance.lastHit = gameObject;
 
         // Trigger set animation
         if (animator != null)
@@ -548,8 +543,8 @@ public class AIBehavior : MonoBehaviour
         AudioManager.PlayBallPlayerInteractionSound();
 
         // Update game manager fields
-        gameManager.gameState = GameManager.GameState.Spiked;
-        gameManager.lastHit = gameObject;
+        GameManager.Instance.gameState = GameManager.GameState.Spiked;
+        GameManager.Instance.lastHit = gameObject;
 
         // Trigger spike animation
         if (animator != null)
@@ -601,9 +596,9 @@ public class AIBehavior : MonoBehaviour
         ballManager.offCourse = false;
 
         // Update game manager fields
-        gameManager.gameState = GameManager.GameState.Served;
-        gameManager.lastHit = gameObject;
-        gameManager.leftAttack = onLeft;
+        GameManager.Instance.gameState = GameManager.GameState.Served;
+        GameManager.Instance.lastHit = gameObject;
+        GameManager.Instance.leftAttack = onLeft;
 
         // Play sounds
         AudioManager.PlayBallPlayerInteractionSound();

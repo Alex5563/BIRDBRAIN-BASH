@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 public class BallInteract : MonoBehaviour
 {
     [Header("Game Manager")]
-    public GameManager gameManager; // Manager of the game
     public bool onLeft; // Whether the player is on the left court
 
     [Header("Ball Manager")]
@@ -65,12 +64,6 @@ public class BallInteract : MonoBehaviour
             ballManager = ball.GetComponent<BallManager>();
         }
 
-        // If not assigned in scene, try to find the game manager
-        if (gameManager == null)
-        {
-            gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        }
-
         // locate contact point child safely
         var cpTransform = transform.Find("ContactPoint");
         if (cpTransform != null)
@@ -122,7 +115,7 @@ public class BallInteract : MonoBehaviour
     void Update()
     {
         // Keep ball completely still before serve
-        if (gameManager != null && gameManager.gameState == GameManager.GameState.PointStart && ballRb != null)
+        if (GameManager.Instance.gameState == GameManager.GameState.PointStart && ballRb != null)
         {
             ballRb.linearVelocity = Vector3.zero;
             ballRb.useGravity = false;
@@ -147,7 +140,7 @@ public class BallInteract : MonoBehaviour
         if (CanHit())
         {
             // Check the game state
-            switch (gameManager.gameState)
+            switch (GameManager.Instance.gameState)
             {
                 // Ball has just been spiked or served
                 case GameManager.GameState.Spiked:
@@ -191,7 +184,7 @@ public class BallInteract : MonoBehaviour
                 // Ball is ready to be served
                 case GameManager.GameState.PointStart:
                     // Christofort: checks if the player is the server then stops them from moving
-                    if (gameManager.server == gameObject)
+                    if (GameManager.Instance.server == gameObject)
                     {
                         serverMovement.controlMovement(false,true);
                         // Force player to face forward toward the net, accounting for rotation offset
@@ -209,7 +202,7 @@ public class BallInteract : MonoBehaviour
                         serverMovement.controlMovement(true, true);
                     }
                     // If this player is the one serving and they press the serve button, serve the ball
-                    if (gameManager.server == gameObject && playerInput.actions.FindAction("Serve").WasPressedThisFrame())
+                    if (GameManager.Instance.server == gameObject && playerInput.actions.FindAction("Serve").WasPressedThisFrame())
                     {
                         ServeBall();
                     }
@@ -221,6 +214,7 @@ public class BallInteract : MonoBehaviour
     // Check if the player can hit the ball
     private bool CanHit()
     {
+        GameManager gameManager = GameManager.Instance;
         // If the point has ended, they cannot hit the ball
         if (gameManager.gameState.Equals(GameManager.GameState.PointEnd)) return false;
         
@@ -264,9 +258,9 @@ public class BallInteract : MonoBehaviour
         AudioManager.PlayBallPlayerInteractionSound();
 
         // Update game manager fields
-        gameManager.gameState = GameManager.GameState.Bumped;
-        gameManager.lastHit = gameObject;
-        gameManager.leftAttack = onLeft;
+        GameManager.Instance.gameState = GameManager.GameState.Bumped;
+        GameManager.Instance.lastHit = gameObject;
+        GameManager.Instance.leftAttack = onLeft;
         // trigger animation
         if (animator != null)
         {
@@ -309,8 +303,8 @@ public class BallInteract : MonoBehaviour
         AudioManager.PlayBallPlayerInteractionSound();
 
         // Update game manager fields
-        gameManager.gameState = GameManager.GameState.Set;
-        gameManager.lastHit = gameObject;
+        GameManager.Instance.gameState = GameManager.GameState.Set;
+        GameManager.Instance.lastHit = gameObject;
         if (animator != null)
         {
             animator.SetTrigger("Set");
@@ -361,8 +355,8 @@ public class BallInteract : MonoBehaviour
         AudioManager.PlayBallPlayerInteractionSound();
 
         // Update game manager fields
-        gameManager.gameState = GameManager.GameState.Spiked;
-        gameManager.lastHit = gameObject;
+        GameManager.Instance.gameState = GameManager.GameState.Spiked;
+        GameManager.Instance.lastHit = gameObject;
         if (animator != null)
         {
             animator.SetTrigger("Spike");
@@ -402,9 +396,9 @@ public class BallInteract : MonoBehaviour
         AudioManager.PlayBallPlayerInteractionSound();
 
         // Update game manager fields
-        gameManager.gameState = GameManager.GameState.Served;
-        gameManager.lastHit = gameObject;
-        gameManager.leftAttack = onLeft;
+        GameManager.Instance.gameState = GameManager.GameState.Served;
+        GameManager.Instance.lastHit = gameObject;
+        GameManager.Instance.leftAttack = onLeft;
         serverMovement.controlMovement(true,true); // christofort: let the server move after gameState updates
         serverMovement.overrideRotation = false; // allow normal rotation after serve
         if (animator != null)
@@ -420,7 +414,7 @@ public class BallInteract : MonoBehaviour
         if (ballManager != null && ballManager.unblockableOwner != null)
         {
             // If the last spiker matches the unblockable owner, prevent blocking
-            if (gameManager != null && gameManager.lastHit == ballManager.unblockableOwner)
+            if (GameManager.Instance.lastHit == ballManager.unblockableOwner)
             {
                 Debug.Log("Block attempted but spike is unblockable.");
                 return;
@@ -445,9 +439,9 @@ public class BallInteract : MonoBehaviour
         ballManager.offCourse = false;
 
         // Update game state
-        gameManager.gameState = GameManager.GameState.Blocked;
-        gameManager.lastHit = gameObject;
-        gameManager.leftAttack = onLeft;
+        GameManager.Instance.gameState = GameManager.GameState.Blocked;
+        GameManager.Instance.lastHit = gameObject;
+        GameManager.Instance.leftAttack = onLeft;
         if (animator != null)
         {
             animator.SetTrigger("Block");
@@ -498,7 +492,7 @@ public class BallInteract : MonoBehaviour
             initVel.Normalize();
 
             // If blocking, want half of the spike speed stuff
-            if (gameManager.gameState.Equals(GameManager.GameState.Blocked))
+            if (GameManager.Instance.gameState.Equals(GameManager.GameState.Blocked))
             {
                 initVel *= baseSpikeSpeed * (1.0f + spikeStat * 0.1f) * 0.5f; 
             }

@@ -114,7 +114,6 @@ public class AudioManager : MonoBehaviour
                 break;
         }
 
-        Debug.Log(instance.audioSource);
         // Play the desired sound
         instance.audioSource.PlayOneShot(birdSounds[(int)soundType], volume);
     }

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -29,6 +30,19 @@ public class GameManager : MonoBehaviour
     private Vector3 leftServeLocation; // The positon where the left team will serve from
     private Vector3 rightServeLocation; // The position where the right team will serve from
 
+    private static GameManager instance; // Private instance of the GameManager that other classes cannot reference
+    public static GameManager Instance // Public instance of GameManager that other classes can reference
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new GameManager();
+            }
+            return instance;
+        }
+    }
+
     // Enum class to represent the game state
     public enum GameState
     {
@@ -39,6 +53,12 @@ public class GameManager : MonoBehaviour
         Set, // State when ball has been set
         Spiked, // State when ball has been spiked
         Blocked // State when ball has been blocked
+    }
+
+    void Awake()
+    {
+        // Initialize singleton to this script
+        instance = this;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -106,79 +126,77 @@ public class GameManager : MonoBehaviour
     }
 
     // Rotate server when the team who did not serve whens a point
-    public void RotateServer()
+    public static void RotateServer()
     {
         // Order for serve rotation:
         // 1st: RP1, 2nd: LP1, 3rd: RP2, 4th: LP2, then start over
-        if (server == rightPlayer1)
+        if (instance.server == instance.rightPlayer1)
         {
-            server = leftPlayer1;
-            leftAttack = true;
+            instance.server = instance.leftPlayer1;
+            instance.leftAttack = true;
         }
-        else if (server == leftPlayer1)
+        else if (instance.server == instance.leftPlayer1)
         {
-            server = rightPlayer2;
-            leftAttack = false;
+            instance.server = instance.rightPlayer2;
+            instance.leftAttack = false;
         }
-        else if (server == rightPlayer2)
+        else if (instance.server == instance.rightPlayer2)
         {
-            server = leftPlayer2;
-            leftAttack = true;
+            instance.server = instance.leftPlayer2;
+            instance.leftAttack = true;
         }
         else
         {
-            server = rightPlayer1;
-            leftAttack = false;
+            instance.server = instance.rightPlayer1;
+            instance.leftAttack = false;
         }
-        Debug.LogFormat("Rotated server: {0}", server);
     }
 
-    // Resets the game to the beginning
-    void OnReset()
-    {
-        // Set the server to the first player on the right team
-        server = rightPlayer1;
-        leftAttack = false;
+    // Resets the game to the beginning, deprecated for the time being
+    // void OnReset()
+    // {
+    //     // Set the server to the first player on the right team
+    //     server = rightPlayer1;
+    //     leftAttack = false;
 
-        // Set the score to 0-0
-        scoreManager.ResetScore();
+    //     // Set the score to 0-0
+    //     scoreManager.ResetScore();
 
-        // Start the point
-        NextPoint();
-    }
+    //     // Start the point
+    //     NextPoint();
+    // }
 
-    public void NextPoint()
+    public static void NextPoint()
     {
         // Reset all positions and velocities for all players
-        leftPlayer1.transform.position = leftPlayer1Origin;
-        leftPlayer2.transform.position = leftPlayer2Origin;
-        rightPlayer1.transform.position = rightPlayer1Origin;
-        rightPlayer2.transform.position = rightPlayer2Origin;
+        instance.leftPlayer1.transform.position = instance.leftPlayer1Origin;
+        instance.leftPlayer2.transform.position = instance.leftPlayer2Origin;
+        instance.rightPlayer1.transform.position = instance.rightPlayer1Origin;
+        instance.rightPlayer2.transform.position = instance.rightPlayer2Origin;
 
-        leftPlayer1.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
-        leftPlayer2.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
-        rightPlayer1.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
-        rightPlayer2.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
-        ball.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        instance.leftPlayer1.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        instance.leftPlayer2.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        instance.rightPlayer1.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        instance.rightPlayer2.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        instance.ball.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
 
-        Debug.LogFormat("Left side is attacking: {0}", leftAttack);
         // Set server's and ball's position
-        if (leftAttack)
+        if (instance.leftAttack)
         {
-            server.transform.position = leftServeLocation;
-            ball.transform.position = leftServeLocation + new Vector3(1, 0, 0);
+            instance.server.transform.position = instance.leftServeLocation;
+            instance.ball.transform.position = instance.leftServeLocation + new Vector3(1, 0, 0);
         }
         else
         {
-            server.transform.position = rightServeLocation;
-            ball.transform.position = rightServeLocation - new Vector3(1, 0, 0);
+            instance.server.transform.position = instance.rightServeLocation;
+            instance.ball.transform.position = instance.rightServeLocation - new Vector3(1, 0, 0);
         }
 
         // Disable gravity for the ball
-        ball.GetComponent<Rigidbody>().useGravity = false;
+        instance.ball.GetComponent<Rigidbody>().useGravity = false;
 
         // Reset the game manager fields
-        gameState = GameState.PointStart;
-        lastHit = null;
+        instance.gameState = GameState.PointStart;
+        instance.lastHit = null;
     }
 }

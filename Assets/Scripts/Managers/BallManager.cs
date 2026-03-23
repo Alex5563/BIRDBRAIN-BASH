@@ -3,7 +3,6 @@ using UnityEngine;
 public class BallManager : MonoBehaviour
 {
     public Vector3 goingTo; // Where the ball is going to
-    public GameManager gameManager; // Game manager object
     public GameObject unblockableOwner; // If set, this player's spike cannot be blocked
     public bool offCourse; // Boolean for whether the ball is off course of where it is supposed to go
     private Rigidbody rb; // Rigidbody of the ball
@@ -18,11 +17,6 @@ public class BallManager : MonoBehaviour
 
         // Set off course to false
         offCourse = false;
-
-        if (gameManager == null)
-        {
-            Debug.LogError("Game Manager was not set in the inspector for Ball Manager!");
-        }
     }
 
     // Calls whenever the character collides with another collider or rigidbody
@@ -30,7 +24,7 @@ public class BallManager : MonoBehaviour
     {
         onBallCollision?.Invoke(other);
         // Activate gravity it's not already activated and the game state is NOT serving
-        if (!rb.useGravity && !gameManager.gameState.Equals(GameManager.GameState.PointStart))
+        if (!rb.useGravity && !GameManager.Instance.gameState.Equals(GameManager.GameState.PointStart))
         {
             rb.useGravity = true;
         }

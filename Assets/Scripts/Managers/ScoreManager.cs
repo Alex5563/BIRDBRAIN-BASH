@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.Events;
 using TMPro;
-using System;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -10,7 +9,6 @@ public class ScoreManager : MonoBehaviour
     public int side2Score = 0;
     public int side1SetsWon = 0;
     public int side2SetsWon = 0;
-    public GameManager gameManager;
 
     [Header("Score UI")]
     public TextMeshProUGUI side1ScoreUI;
@@ -44,14 +42,9 @@ public class ScoreManager : MonoBehaviour
 
         LeftScored.AddListener(EventManager.LeftScored);
         RightScored.AddListener(EventManager.RightScored);
+
         // Set the scores to 0, the sets to 0, right to serve, and the ball is in play
         ResetMatch();
-
-        // Make sure game manager is not null in inspector
-        if (gameManager == null)
-        {
-            Debug.LogError("Game Manager was not set in inspector for Score Manager!");
-        }
         LeftScored.Invoke();
     }
 
@@ -93,6 +86,9 @@ public class ScoreManager : MonoBehaviour
     {
         yield return new WaitForSeconds(.2f);
 
+        // Get the game manager's instance
+        GameManager gameManager = GameManager.Instance;
+
         // Checks if ball still in play
         if (inPlay)
         {
@@ -124,7 +120,7 @@ public class ScoreManager : MonoBehaviour
     void CheckWinSet(bool leftJustScored)
     {
         // Set game manager state to end of point
-        gameManager.gameState = GameManager.GameState.PointEnd;
+        GameManager.Instance.gameState = GameManager.GameState.PointEnd;
 
         if (side1Score >= 15 && side1Score - side2Score >= 2)
         {
@@ -172,7 +168,7 @@ public class ScoreManager : MonoBehaviour
         // Check for rotation of server
         if (leftJustScored != leftLastScored)
         {
-            gameManager.RotateServer();
+            GameManager.RotateServer();
             leftLastScored = !leftLastScored;
         }
 
@@ -183,8 +179,8 @@ public class ScoreManager : MonoBehaviour
         yield return new WaitForSeconds(2.0f);
 
         // Start the next point
-        gameManager.leftAttack = leftLastScored;
-        gameManager.NextPoint();
+        GameManager.Instance.leftAttack = leftLastScored;
+        GameManager.NextPoint();
         inPlay = true;
     }
 

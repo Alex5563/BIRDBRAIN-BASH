@@ -12,7 +12,6 @@ public class MultiplayerManager : MonoBehaviour
 
     [SerializeField] private GameObject aiPrefab; // Prefab for an AI player
 
-    [SerializeField] private GameManager gameManager; // Instance of the game manager
     private CharacterManager cManager; // Instance of character manager
     private HashSet<InputDevice> inputDevices = new HashSet<InputDevice>(); // Unique input devices currently being used
     private static MultiplayerManager instance; // Singleton reference to the manager
@@ -192,6 +191,7 @@ public class MultiplayerManager : MonoBehaviour
 
         // Find the follow object for this player and set their role in game manager
         FollowObject fo;
+        GameManager gameManager = GameManager.Instance;
         if (playerCount == 0)
         {
             fo = GameObject.Find("PlayerOneFollow").GetComponent<FollowObject>();
@@ -242,6 +242,7 @@ public class MultiplayerManager : MonoBehaviour
 
         // Assign the ai to its respective spot for the game manager
         FollowObject fo;
+        GameManager gameManager = GameManager.Instance;
         if (playerCount == 1)
         {
             gameManager.leftPlayer2 = ai;
