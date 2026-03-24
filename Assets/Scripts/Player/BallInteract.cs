@@ -18,7 +18,7 @@ public class BallInteract : MonoBehaviour
     public float spikeStat; //Spiking power for the bird
     
     [Header("Bird Selection")]
-    [SerializeField] private BirdType birdType = BirdType.PENGUIN; // Type of the bird for audio noises; default to penguin
+    [SerializeField] private BirdType birdType = BirdType.SEAGULL; // Type of the bird for audio noises; default to penguin
 
     // Change the birdType from other managers
     public void SetBirdType(BirdType type) { birdType = type; }

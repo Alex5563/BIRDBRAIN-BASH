@@ -8488,6 +8488,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5016253628873950847, guid: 28879bb1223b8d24781e5c885e5d59e1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.39
+      objectReference: {fileID: 0}
+    - target: {fileID: 5709896424096045013, guid: 28879bb1223b8d24781e5c885e5d59e1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7155783748839112206, guid: 28879bb1223b8d24781e5c885e5d59e1, type: 3}
       propertyPath: m_Name
       value: PenguinAI
@@ -8644,6 +8652,10 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1192251009908472663, guid: 1aadea1a1603bab47a2d8d6cc2f3117e, type: 3}
+      propertyPath: jumpForce
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1192251009908472663, guid: 1aadea1a1603bab47a2d8d6cc2f3117e, type: 3}
       propertyPath: ballManager
       value: 
       objectReference: {fileID: 18352594}
@@ -8651,6 +8663,14 @@ PrefabInstance:
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 614297107}
+    - target: {fileID: 1192251009908472663, guid: 1aadea1a1603bab47a2d8d6cc2f3117e, type: 3}
+      propertyPath: maxAirSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1192251009908472663, guid: 1aadea1a1603bab47a2d8d6cc2f3117e, type: 3}
+      propertyPath: maxGroundSpeed
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5796189094087152554, guid: 1aadea1a1603bab47a2d8d6cc2f3117e, type: 3}
       propertyPath: m_Name
       value: PelicanAI

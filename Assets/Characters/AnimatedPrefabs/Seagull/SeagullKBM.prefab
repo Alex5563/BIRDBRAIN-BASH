@@ -5202,13 +5202,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62a52fa449ea78c439b417bf12bbb9f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 0}
   onLeft: 0
   ballManager: {fileID: 0}
   interactionRadius: 3
   animator: {fileID: 0}
   spikeStat: 5
-  birdType: 0
+  birdType: 6
 --- !u!114 &2970489089696901954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5224,7 +5223,6 @@ MonoBehaviour:
   debuffLength: 5
   debuffAmount: 2
   debuffWindowLength: 20
-  gameManager: {fileID: 0}
 --- !u!114 &1672991119916141320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5237,7 +5235,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb7edfc66bc6f9043adb8e366d30220c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 0}
   dashSpeed: 100
   cooldown: 15
   shoveForce: 18
