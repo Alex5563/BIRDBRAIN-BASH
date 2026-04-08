@@ -37,7 +37,7 @@ public class OwlOffensive : MonoBehaviour
         if (onCooldown) yield break;
 
         // Create line object and set its position and rotation to be between the start and end points
-        GameObject line = new("OwlOffensiveLine");
+        GameObject line = new("OwlOffensiveLine") { layer = LayerMask.NameToLayer("Line") };
         LineRenderer lineRenderer = line.AddComponent<LineRenderer>();
         lineRenderer.material = new(Shader.Find("Sprites/Default"));
         lineRenderer.startColor = Color.red;
@@ -49,9 +49,9 @@ public class OwlOffensive : MonoBehaviour
         lineRenderer.SetPosition(1, end);
 
         BoxCollider lineCollider = line.AddComponent<BoxCollider>();
+        lineCollider.isTrigger = false;;
         lineCollider.size = new Vector3(Vector3.Distance(start, end), 20f, 0f);
         lineCollider.center = Vector3.up * 10f; // moves the collider up so its not underground
-        // the 10 is to move it up by the height / 2 bc the collider starts at the center 
 
         onCooldown = true;
         yield return new WaitForSeconds(lineDuration);

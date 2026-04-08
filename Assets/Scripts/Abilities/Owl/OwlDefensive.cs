@@ -21,7 +21,7 @@ public class OwlDefensive : BirdAbility
         if (onCooldown) return;
 
         // Predict ball trajectory and draw line for lineDuration seconds, then remove line and start cooldown
-        // EJ: This is a placeholder implementation using physics, the actual trajectory prediction would be more complex using a "ghost simulation"
+        // EJ: This is a placeholder implementation using physics, the actual trajectory prediction would be more complex using a "ghost simulation" scene under the main scene
         Vector3 ballPosition = GameObject.FindWithTag("Ball").transform.position;
         Vector3 ballVelocity = GameObject.FindWithTag("Ball").GetComponent<Rigidbody>().linearVelocity;
         Vector3 predictedPosition = ballPosition + ballVelocity * 1f; // Predict position 1 second in the future
