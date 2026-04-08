@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +12,8 @@ public class OwlOffensive : MonoBehaviour
     [SerializeField] private float cooldown = 25f + 8f; // 8s line duration + 25s cooldown
     private bool onCooldown = false;
     [SerializeField] private float lineDuration = 8f;
+    [SerializeField] private Color lineColor = Color.red;
+    [SerializeField] private float lineWidth = 0.2f;
 
     public void OnOffensiveAbility(InputValue value)
     {
@@ -40,18 +43,18 @@ public class OwlOffensive : MonoBehaviour
         GameObject line = new("OwlOffensiveLine") { layer = LayerMask.NameToLayer("Line") };
         LineRenderer lineRenderer = line.AddComponent<LineRenderer>();
         lineRenderer.material = new(Shader.Find("Sprites/Default"));
-        lineRenderer.startColor = Color.red;
-        lineRenderer.endColor = Color.red;
-        lineRenderer.startWidth = 0.2f;
-        lineRenderer.endWidth = 0.2f;
+        lineRenderer.startColor = lineColor;
+        lineRenderer.endColor = lineColor;
+        lineRenderer.startWidth = lineWidth;
+        lineRenderer.endWidth = lineWidth;
         lineRenderer.positionCount = 2;
         lineRenderer.SetPosition(0, start);
         lineRenderer.SetPosition(1, end);
 
         BoxCollider lineCollider = line.AddComponent<BoxCollider>();
-        lineCollider.isTrigger = false;;
+        lineCollider.isTrigger = false;
         lineCollider.size = new Vector3(Vector3.Distance(start, end), 20f, 0f);
-        lineCollider.center = Vector3.up * 10f; // moves the collider up so its not underground
+        lineCollider.center = new Vector3(end.x / 2, 10f, 0f); // moves the collider up so its not underground
 
         onCooldown = true;
         yield return new WaitForSeconds(lineDuration);
